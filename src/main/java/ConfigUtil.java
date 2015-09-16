@@ -20,4 +20,45 @@ public class ConfigUtil {
         }
         return configuration;
     }
+    public static boolean checkMatrixProb(float[][] probMatrix) {
+        return isItSquareMatrix(probMatrix) && !isRowsSumGreater1(probMatrix) && !isColumnsSumGreater1(probMatrix);
+
+    }
+
+    private static boolean isColumnsSumGreater1(float[][] probMatrix) {
+        float sum;
+        int size = probMatrix.length;
+        for (int i = 0; i != size; i++){
+            sum = 0;
+            for (int j = 0; j != size; j++){
+                sum += probMatrix[j][i];
+            }
+            if (sum != 1.0f) return true;
+        }
+        return false;
+    }
+
+    private static boolean isRowsSumGreater1(float[][] probMatrix) {
+        float sum;
+        int size = probMatrix.length;
+        for (int i = 0; i != size; i++){
+            sum = 0;
+            for (int j = 0; j != size; j++){
+                sum += probMatrix[i][j];
+            }
+            if (sum != 1.0f) return true;
+        }
+        return false;
+    }
+
+    private static boolean isItSquareMatrix(float[][] probMatrix){
+        int rows = probMatrix.length;
+        boolean check = true;
+        for (int i = 0; i != rows && check; i++){
+            if (probMatrix[i].length != rows){
+                check = false;
+            }
+        }
+        return check;
+    }
 }
