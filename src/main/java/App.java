@@ -7,13 +7,35 @@ import java.util.Random;
 
 public class App {
     public static void main(String[] args){
-        saveTestConfiguration();
-        Configuration cfg = ConfigUtil.loadConfiguration("file.xml");
-        assert cfg != null;
+//        saveTestConfiguration();
+//        Configuration cfg = ConfigUtil.loadConfiguration("file.xml");
+//        assert cfg != null;
+//
+//        Generator generator = new Generator(cfg);
+//        System.out.println(generator.getRandomText(55));
+        float[][] testUtilMatrix1 = new float[][] {
+                new float[] {0.3f, 0.4f, 0.3f},
+                new float[] {0.5f, 0.3f, 0.2f},
+                new float[] {0.2f, 0.3f, 0.5f}};
 
-        Generator generator = new Generator(cfg);
-        System.out.println(generator.getRandomText(55));
+        boolean check = ConfigUtil.checkMatrixProb(testUtilMatrix1);
+        System.out.println(check);
 
+        float[][] testUtilMatrix2 = new float[][] {
+                new float[] {0.1f, 0.1f, 0.1f},
+                new float[] {0.1f, 0.1f, 0.1f},
+                new float[] {0.1f, 0.1f, 0.1f}};
+
+        check = ConfigUtil.checkMatrixProb(testUtilMatrix2);
+        System.out.println(check);
+
+        float[][] testUtilMatrix3 = new float[][] {
+                new float[] {0.1f, 0.2f, 0.7f},
+                new float[] {0.4f, 0.5f, 0.1f},
+                new float[] {0.3f,0.3f, 0.4f}};
+
+        check = ConfigUtil.checkMatrixProb(testUtilMatrix3);
+        System.out.println(check);
     }
 
     private static void saveTestConfiguration() {
