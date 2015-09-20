@@ -8,10 +8,17 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    final static float MIN_HEIGHT = 575f;
+    final static float MIN_WIDTH = 675f;
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("../../../mainStage/generator.fxml"));
+
+        primaryStage.setMinHeight(MIN_HEIGHT);
+        primaryStage.setMinWidth(MIN_WIDTH);
+
         primaryStage.setTitle("Лабораторная работа №1");
+
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
        /* FXMLLoader loader = new FXMLLoader();
