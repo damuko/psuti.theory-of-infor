@@ -11,8 +11,8 @@ public class Generator {
     }
 
     public String getRandomText(int length){
-        StringBuilder resultBuilder = new StringBuilder();
 // TODO: add handling for vectors
+        StringBuilder resultBuilder = new StringBuilder();
 //        Character firstSymbol = getRandomSymbol(cfg.getMatrixProb()[0]);
         char firstSymbol = getFirstSymbol();
 
