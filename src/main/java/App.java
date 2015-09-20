@@ -1,18 +1,20 @@
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import java.io.File;
-import java.util.Random;
 
 public class App {
     public static void main(String[] args){
-//        saveTestConfiguration();
-//        Configuration cfg = ConfigUtil.loadConfiguration("file.xml");
-//        assert cfg != null;
-//
-//        Generator generator = new Generator(cfg);
-//        System.out.println(generator.getRandomText(55));
+//        demonstrateMatrixValidation();
+        saveTestConfiguration();
+        Configuration cfg = ConfigUtil.loadConfiguration("file.xml");
+        if (cfg != null){
+            String testTxt = new Generator(cfg).getRandomText(256);
+            ConfigUtil.isTextValid(testTxt,cfg);
+        }
+    }
+
+    private static void demonstrateMatrixValidation() {
         float[][] testUtilMatrix1 = new float[][] {
                 new float[] {0.3f, 0.4f, 0.3f},
                 new float[] {0.5f, 0.3f, 0.2f},
