@@ -1,3 +1,5 @@
+package com.toi.generator;
+
 import java.util.Random;
 
 public class Generator {
@@ -9,11 +11,8 @@ public class Generator {
     }
 
     public String getRandomText(int length){
-        float probability = rnd.nextFloat();
-
-
         StringBuilder resultBuilder = new StringBuilder();
-
+// TODO: add handling for vectors
 //        Character firstSymbol = getRandomSymbol(cfg.getMatrixProb()[0]);
         char firstSymbol = getFirstSymbol();
 

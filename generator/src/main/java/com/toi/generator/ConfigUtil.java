@@ -1,4 +1,5 @@
-package sample.configuration;
+package com.toi.generator;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -21,12 +22,12 @@ public class ConfigUtil {
         }
         return configuration;
     }
-    public static boolean checkMatrixProb(float[][] probMatrix) {
-        return isItSquareMatrix(probMatrix) && !isRowsSumGreater1(probMatrix) && !isColumnsSumGreater1(probMatrix);
 
+    public static boolean checkMatrixProb(float[][] probMatrix) {
+        return isItSquareMatrix(probMatrix) && isRowsSumEquals1(probMatrix) && isColumnsSumEquals1(probMatrix);
     }
 
-    private static boolean isColumnsSumGreater1(float[][] probMatrix) {
+    private static boolean isColumnsSumEquals1(float[][] probMatrix) {
         float sum;
         int size = probMatrix.length;
         for (int i = 0; i != size; i++){
@@ -34,12 +35,12 @@ public class ConfigUtil {
             for (int j = 0; j != size; j++){
                 sum += probMatrix[j][i];
             }
-            if (sum != 1.0f) return true;
+            if (sum != 1.0f) return false;
         }
-        return false;
+        return true;
     }
 
-    private static boolean isRowsSumGreater1(float[][] probMatrix) {
+    private static boolean isRowsSumEquals1(float[][] probMatrix) {
         float sum;
         int size = probMatrix.length;
         for (int i = 0; i != size; i++){
@@ -47,9 +48,9 @@ public class ConfigUtil {
             for (int j = 0; j != size; j++){
                 sum += probMatrix[i][j];
             }
-            if (sum != 1.0f) return true;
+            if (sum != 1.0f) return false;
         }
-        return false;
+        return true;
     }
 
     private static boolean isItSquareMatrix(float[][] probMatrix){
@@ -62,15 +63,43 @@ public class ConfigUtil {
         }
         return check;
     }
+
+    public static boolean isTextValid(String text, Configuration cfg){
+        if (text.length() <= 1) return false;
+
+        int textLength = text.length();
+        int matrixSize = cfg.getMatrixProb().length;
+        float[][] resultMatrix = new float[matrixSize][matrixSize];
+
+        for (int i = 0; i != textLength - 1; i++){
+            char first, second;
+
+            first = text.charAt(i);
+            second = text.charAt(i + 1);
+
+            int row = cfg.getSymbolPosition(first);
+            int column = cfg.getSymbolPosition(second);
+
+            resultMatrix[row][column]++;
+        }
+
+        for (int i = 0; i != matrixSize; i++){
+            for(int j = 0; j != matrixSize; j++){
+                resultMatrix[i][j] /= textLength;
+            }
+        }
+        //TODO: add comparing between result matrix & probability matrix
+        return true;
+    }
+
     public  static char [] getSymbolsFromString (String str) throws Exception{
         String [] substrings = str.split(",");
         char [] charArray = new char[substrings.length];
         for(int i=0; i< substrings.length; i++) {
             if (substrings[i].length()==1) charArray [i] = substrings[i].charAt(0);
-            else throw new Exception("Введите символы через запятую!");
+            else throw new Exception("Please enter symbols and divide them by comma!");
         }
         return charArray;
 
     }
-
 }
