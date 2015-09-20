@@ -9,9 +9,7 @@ public class Generator {
     }
 
     public String getRandomText(int length){
-        float probability = rnd.nextFloat();
-
-
+// TODO: add handling for vectors
         StringBuilder resultBuilder = new StringBuilder();
 
 //        Character firstSymbol = getRandomSymbol(cfg.getMatrixProb()[0]);
