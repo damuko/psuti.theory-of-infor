@@ -1,20 +1,19 @@
+import com.toi.generator.ConfigUtil;
+import com.toi.generator.Configuration;
+import com.toi.generator.Generator;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import java.io.File;
-import java.util.Random;
 
 public class App {
     public static void main(String[] args){
-        saveTestConfiguration();
-        Configuration cfg = ConfigUtil.loadConfiguration("file.xml");
-        assert cfg != null;
 
-        Generator generator = new Generator(cfg);
-        System.out.println(generator.getRandomText(55));
 
     }
+
+
 
     private static void saveTestConfiguration() {
         Configuration testCfg = new Configuration();
