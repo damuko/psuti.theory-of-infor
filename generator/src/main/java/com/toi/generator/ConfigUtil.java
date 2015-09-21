@@ -64,13 +64,13 @@ public class ConfigUtil {
         return check;
     }
 
-    public static boolean isTextValid(String text, Configuration cfg){
-        if (text.length() <= 1) return false;
+    public static float[][] isTextValid(String text, Configuration cfg){
+        if (text.length() <= 1) return null;
 
         int textLength = text.length();
         int matrixSize = cfg.getMatrixProb().length;
         float[][] resultMatrix = new float[matrixSize][matrixSize];
-
+        float[] resultSymbols = new float[matrixSize];
         for (int i = 0; i != textLength - 1; i++){
             char first, second;
 
@@ -78,6 +78,7 @@ public class ConfigUtil {
             second = text.charAt(i + 1);
 
             int row = cfg.getSymbolPosition(first);
+            resultSymbols[row]++;
             int column = cfg.getSymbolPosition(second);
 
             resultMatrix[row][column]++;
@@ -85,18 +86,23 @@ public class ConfigUtil {
 
         for (int i = 0; i != matrixSize; i++){
             for(int j = 0; j != matrixSize; j++){
-                resultMatrix[i][j] /= textLength;
+                resultMatrix[i][j] /= resultSymbols[i];
             }
         }
         //TODO: add comparing between result matrix & probability matrix
-        return true;
+//        return true;
+
+        return resultMatrix;
     }
 
     public  static char [] getSymbolsFromString (String str) throws Exception{
         String [] substrings = str.split(",");
         char [] charArray = new char[substrings.length];
         for(int i=0; i< substrings.length; i++) {
-            if (substrings[i].length()==1) charArray [i] = substrings[i].charAt(0);
+            String currentStr = substrings[i];
+            if (currentStr.length() == 1
+                    && Character.isLetterOrDigit(currentStr.charAt(0)))
+                charArray [i] = currentStr.charAt(0);
             else throw new Exception("Please enter symbols and divide them by comma!");
         }
         return charArray;

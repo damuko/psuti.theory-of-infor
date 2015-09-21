@@ -1,7 +1,8 @@
 package com.toi.generator;
 
 import java.util.Random;
-
+//          TODO:????????? ???????? ????????\???????????
+// TODO: ???????? ?????????? ??? ???????
 public class Generator {
     private Configuration cfg;
     private Random rnd = new Random();
@@ -13,7 +14,6 @@ public class Generator {
     public String getRandomText(int length){
 // TODO: add handling for vectors
         StringBuilder resultBuilder = new StringBuilder();
-//        Character firstSymbol = getRandomSymbol(cfg.getMatrixProb()[0]);
         char firstSymbol = getFirstSymbol();
 
         float[] currentRow = getNextRow(firstSymbol);
@@ -39,13 +39,14 @@ public class Generator {
     }
 
     private Character getRandomSymbol(float[] row){
+
         float right = 0;
         float currRandom = rnd.nextFloat();
         Character randomCharacter = null;
         for (int i = 0; i != row.length; i++){
-            right += cfg.getMatrixProb()[0][i];
-
-            if (currRandom <= right) {
+//          TODO: add right borders to separate array
+            right += row[i];
+            if (currRandom <= right){
                 randomCharacter = cfg.getSymbols()[i];
                 break;
             }
