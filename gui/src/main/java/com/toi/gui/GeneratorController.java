@@ -4,13 +4,10 @@ import com.sun.media.sound.InvalidFormatException;
 import com.toi.generator.ConfigUtil;
 import com.toi.generator.Configuration;
 import javafx.fxml.FXML;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.*;
-import java.util.Arrays;
 
 public class GeneratorController {
     @FXML
@@ -63,9 +60,9 @@ public class GeneratorController {
     public void confirmButtonClicked()
     {
         try {
-            setInitSymbols();
+            allSymbols = parseInitSymbols();
 
-            float[][] parsedMatrix = parseMatrixFromTextArea(probabilityInputArea.getText());
+            float[][] parsedMatrix = parseMatrixFromText(probabilityInputArea.getText());
 
             Configuration cfg = new Configuration();
             cfg.setMatrixProb(parsedMatrix);
@@ -79,14 +76,7 @@ public class GeneratorController {
 //            }
             float[][] resultMatrix = ConfigUtil.isTextValid(generatedText,cfg);
 
-            if (resultMatrix != null) {
-                for (int i =0; i != resultMatrix.length; i++){
-                    for (int j = 0; j != resultMatrix.length; j++) {
-                        generatedSequenceTextArea.appendText(Float.toString(resultMatrix[i][j] ) + ',');
-                    }
-                    generatedSequenceTextArea.appendText("\n");
-                }
-            }
+            printResultProbabilityMatrix(resultMatrix);
             writeToDefaultFile(generatedText);
         }
         catch (Exception e) {
@@ -96,19 +86,27 @@ public class GeneratorController {
         }
     }
 
-    private void writeToDefaultFile(String text){
+    private void printResultProbabilityMatrix(float[][] resultMatrix) {
+        if (resultMatrix != null) {
+            for (int i =0; i != resultMatrix.length; i++){
+                for (int j = 0; j != resultMatrix.length; j++) {
+                    generatedSequenceTextArea.appendText(Float.toString(resultMatrix[i][j] ) + ',');
+                }
+                generatedSequenceTextArea.appendText("\n");
+            }
+        }
+    }
+
+    private void writeToDefaultFile(String text) throws IOException {
         final String DEF_FILE_NAME = "generated_sequence.txt";
         FileWriter fw = null;
         try (PrintWriter pw = new PrintWriter(new FileWriter(DEF_FILE_NAME))) {
-//            fw = new FileWriter(DEF_FILE_NAME);
             pw.println(text);
         } catch (IOException ex) {
             //TODO: modify exception handling
-            Alert validationMsg = new Alert(Alert.AlertType.ERROR,
-                    ex.getMessage(), ButtonType.OK);
-            validationMsg.showAndWait();
+            throw new IOException("An error occurred when attempting to save " +
+                    "generated sequence to file!");
         }
-//            fw.close();
 
     }
     private int getSequenceSize(){
@@ -122,7 +120,8 @@ public class GeneratorController {
         return size;
     }
 
-    private float[][] parseMatrixFromTextArea(String textToParse) throws InvalidFormatException {
+    private float[][] parseMatrixFromText(String textToParse) throws InvalidFormatException,
+            NumberFormatException {
         float[][] resultMatrix = null;
         if (textToParse.length() == 0) return null;
 
@@ -133,7 +132,6 @@ public class GeneratorController {
             String[] values = lines[i].split(",");
 
             if (values.length != lines.length || values.length != allSymbols.length)
-//                TODO:add alert
                 throw new InvalidFormatException("Input size is incorrect!");
 
 
@@ -142,58 +140,18 @@ public class GeneratorController {
                 try {
                     resultMatrix[i][j] = Float.parseFloat(values[j]);
                 } catch (NumberFormatException nfe){
-                    Alert textAreaValidation = new Alert(Alert.AlertType.ERROR,
-                            "Use only numeric values to enter!", ButtonType.OK);
-                    textAreaValidation.showAndWait();
-
-                    return null;
+                    throw new NumberFormatException("Use only numeric values to enter!");
                 }
             }
 
         }
+        if (!ConfigUtil.validateMatrixProb(resultMatrix))
+           throw new InvalidFormatException("Probability matrix should be square. Rows sum should be equals to 1");
         return resultMatrix;
     }
-    private void initTableView() {
-        //init empty values for table observable collection
-        float[][] tmpProbabilityMatrix = new float[allSymbols.length][];
 
-        for (int i = 0; i != allSymbols.length; i++) {
-            tmpProbabilityMatrix[i] = new float[allSymbols.length];
-        }
-
-//            probabilityMatrix.clear();
-        probabilityMatrix = FXCollections.observableArrayList();
-        probabilityMatrix.addAll(Arrays.asList(tmpProbabilityMatrix));
-
-        probabilityTable.getColumns().clear();
-        probabilityTable.setEditable(true);
-
-        //add columns
-        for (int i = 0; i != probabilityMatrix.size(); i++){
-            String columnName = Character.toString(allSymbols[i]);
-            TableColumn tc = new TableColumn<>(columnName);
-//                tc.setCellValueFactory(TextFieldTableCell.forTableColumn(new FloatStringConverter()));
-            tc.setCellValueFactory(new PropertyValueFactory<>(columnName));
-            probabilityTable.getColumns().add(tc);
-        }
-
-        probabilityTable.setItems(probabilityMatrix);
-    }
-
-    private void addColumn(String key, String name) {
-        TableColumn<String, Integer> newColumn = new TableColumn<>(name);
-        newColumn.setCellValueFactory(new PropertyValueFactory<String, Integer>(key));
-//        probabilityTable.getColumns().add(newColumn);
-    }
-
-    private void setInitSymbols() throws Exception {
+    private char[] parseInitSymbols() throws Exception {
         String insertedText = insertedSymbolsTextArea.getText().trim();
-        allSymbols = ConfigUtil.getSymbolsFromString(insertedText);
+        return ConfigUtil.getSymbolsFromString(insertedText);
     }
-
-    public void confirmProbButtonClicked()
-    {
-    }
-
-
 }
