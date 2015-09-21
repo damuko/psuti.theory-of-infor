@@ -8,8 +8,8 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    final static float MIN_HEIGHT = 575f;
-    final static float MIN_WIDTH = 675f;
+    final static float MIN_HEIGHT = 500f;
+    final static float MIN_WIDTH = 500f;
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("../../../mainStage/generator.fxml"));
