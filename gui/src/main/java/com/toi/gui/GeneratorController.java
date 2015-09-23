@@ -1,6 +1,5 @@
 package com.toi.gui;
 
-import com.sun.media.sound.InvalidFormatException;
 import com.toi.generator.ConfigUtil;
 import com.toi.generator.Configuration;
 import javafx.fxml.FXML;
@@ -31,6 +30,12 @@ public class GeneratorController {
     @FXML
     private TextArea generatedSequenceTextArea;
 
+    @FXML
+    private Label statusLbl;
+
+    @FXML
+    private Label statusValueLbl;
+
 //    @FXML
 //    private TableColumn<Character, Integer> id;
 
@@ -59,31 +64,36 @@ public class GeneratorController {
 
     public void confirmButtonClicked()
     {
+        executeGeneration();
+    }
+
+    private void executeGeneration() {
         try {
             allSymbols = parseInitSymbols();
 
             float[][] parsedMatrix = parseMatrixFromText(probabilityInputArea.getText());
 
-            Configuration cfg = new Configuration();
-            cfg.setMatrixProb(parsedMatrix);
-            cfg.setSymbols(allSymbols);
+            Configuration cfg = new Configuration(allSymbols,parsedMatrix);
             int generatedSeqSize = getSequenceSize();
 
             String generatedText = new com.toi.generator.Generator(cfg).getRandomText(generatedSeqSize);
-            generatedSequenceTextArea.clear();
-//            if (generatedSeqSize < 1000000) {
-//                generatedSequenceTextArea.setText(generatedText);
-//            }
-            float[][] resultMatrix = ConfigUtil.isTextValid(generatedText,cfg);
 
-            printResultProbabilityMatrix(resultMatrix);
-            writeToDefaultFile(generatedText);
+            outputResults(cfg, generatedText);
         }
         catch (Exception e) {
             Alert validationMessage = new Alert(Alert.AlertType.ERROR,
                     e.getMessage(), ButtonType.OK);
             validationMessage.showAndWait();
         }
+    }
+
+    private void outputResults(Configuration cfg, String generatedText) throws IOException {
+        generatedSequenceTextArea.clear();
+
+        float[][] resultMatrix = ConfigUtil.calcResultProbabilityMatrix(generatedText, cfg);
+        printResultProbabilityMatrix(resultMatrix);
+
+        writeToDefaultFile(generatedText);
     }
 
     private void printResultProbabilityMatrix(float[][] resultMatrix) {
@@ -99,7 +109,6 @@ public class GeneratorController {
 
     private void writeToDefaultFile(String text) throws IOException {
         final String DEF_FILE_NAME = "generated_sequence.txt";
-        FileWriter fw = null;
         try (PrintWriter pw = new PrintWriter(new FileWriter(DEF_FILE_NAME))) {
             pw.println(text);
         } catch (IOException ex) {
@@ -110,7 +119,7 @@ public class GeneratorController {
 
     }
     private int getSequenceSize(){
-        int size = 0;
+        int size;
         try {
             size = Integer.parseInt(symbolsQuantityField.getText());
         } catch (NumberFormatException nfe) {
@@ -120,9 +129,8 @@ public class GeneratorController {
         return size;
     }
 
-    private float[][] parseMatrixFromText(String textToParse) throws InvalidFormatException,
-            NumberFormatException {
-        float[][] resultMatrix = null;
+    private float[][] parseMatrixFromText(String textToParse) throws IllegalArgumentException {
+        float[][] resultMatrix;
         if (textToParse.length() == 0) return null;
 
         String[] lines = textToParse.split("\n");
@@ -132,7 +140,7 @@ public class GeneratorController {
             String[] values = lines[i].split(",");
 
             if (values.length != lines.length || values.length != allSymbols.length)
-                throw new InvalidFormatException("Input size is incorrect!");
+                throw new IllegalArgumentException("Input size is incorrect!");
 
 
             resultMatrix[i] = new float[values.length];
@@ -146,7 +154,7 @@ public class GeneratorController {
 
         }
         if (!ConfigUtil.validateMatrixProb(resultMatrix))
-           throw new InvalidFormatException("Probability matrix should be square. Rows sum should be equals to 1");
+           throw new IllegalArgumentException("Probability matrix should be square. Rows sum should be equals to 1");
         return resultMatrix;
     }
 
