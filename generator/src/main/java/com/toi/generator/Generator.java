@@ -1,33 +1,65 @@
 package com.toi.generator;
 
 import java.util.Random;
-//          TODO:????????? ???????? ????????\???????????
-// TODO: ???????? ?????????? ??? ???????
-public class Generator {
-    private Configuration cfg;
-    private Random rnd = new Random();
 
+public class Generator {
+    private final Configuration cfg;
+    private final float[][] symbolsBorders;
+    private final Random rnd = new Random();
+    private byte dimension;
     public Generator(Configuration cfg) {
         this.cfg = cfg;
+
+        symbolsBorders = initSymbolsBorders();
     }
 
     public String getRandomText(int length){
 // TODO: add handling for vectors
+        return getRandomTextFromProbabilityMatrix(length);
+//        return getRandomTextFromVector(length);
+    }
+
+
+    private String getRandomTextFromVector(int length){
+        StringBuilder resultBuilder = new StringBuilder();
+        char firstSymbol = getFirstSymbol();
+//        char firstSymbol = getRandomSymbol(cfg.getMatrixProb()[0]);
+        for (int i = 0; i != length; i++) {
+            resultBuilder.append(getRandomSymbolFromVector());
+        }
+
+        return resultBuilder.toString();
+    }
+
+    private String getRandomTextFromProbabilityMatrix(int length) {
         StringBuilder resultBuilder = new StringBuilder();
         char firstSymbol = getFirstSymbol();
 
-        float[] currentRow = getNextRow(firstSymbol);
-
+        int symbolPosition = cfg.getSymbolPosition(firstSymbol);
         for (int j = 0; j != length; j++) {
-            Character rndCharacter = getRandomSymbol(currentRow);
+            Character rndCharacter = getRandomSymbol(symbolPosition);
+            symbolPosition = cfg.getSymbolPosition(rndCharacter);
 
-            currentRow = getNextRow(rndCharacter);
             resultBuilder.append(rndCharacter);
         }
 
         return resultBuilder.toString();
     }
 
+    private float[][] initSymbolsBorders(){
+        //TODO: make sure that matrix with one column can be calculated there
+        int matrixSize = cfg.getSymbols().length;
+        float[][] symbolsBorders = new float[matrixSize][matrixSize];
+        float previousBorder;
+        for (int i = 0; i != matrixSize; i++){
+            previousBorder = 0;
+            for (int j = 0; j != matrixSize; j++){
+                symbolsBorders[i][j] = cfg.getMatrixProb()[i][j] + previousBorder;
+                previousBorder = symbolsBorders[i][j];
+            }
+        }
+        return symbolsBorders;
+    }
     private char getFirstSymbol(){
         int nextPosition = rnd.nextInt(cfg.getSymbols().length);
         return cfg.getSymbols()[nextPosition];
@@ -38,15 +70,24 @@ public class Generator {
         return cfg.getMatrixProb()[charPosition];
     }
 
-    private Character getRandomSymbol(float[] row){
+    private Character getRandomSymbolFromVector() {
+        float curRandom = rnd.nextFloat();
+        Character randomChar = null;
+        for (int i = 0; i != cfg.getSymbols().length; i++){
+            if (curRandom <= symbolsBorders[i][0]) {
+                randomChar = cfg.getSymbols()[i];
+                break;
+            }
+        }
 
-        float right = 0;
+        return randomChar;
+    }
+    private Character getRandomSymbol(int symbolPosition){
+
         float currRandom = rnd.nextFloat();
         Character randomCharacter = null;
-        for (int i = 0; i != row.length; i++){
-//          TODO: add right borders to separate array
-            right += row[i];
-            if (currRandom <= right){
+        for (int i = 0; i != cfg.getSymbols().length; i++){
+            if (currRandom <= symbolsBorders[symbolPosition][i]) {
                 randomCharacter = cfg.getSymbols()[i];
                 break;
             }
