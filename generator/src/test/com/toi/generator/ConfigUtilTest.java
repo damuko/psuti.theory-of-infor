@@ -1,6 +1,5 @@
 package com.toi.generator;
 
-import com.toi.generator.ConfigUtil;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -42,7 +41,7 @@ public class ConfigUtilTest {
                 new float[] {0.3f,0.3f, 0.4f}};
 
         boolean check = ConfigUtil.validateMatrixProb(testUtilMatrix3);
-        System.out.println("Test matrix validation with incorrect sums in collumns: " + check);
+        System.out.println("Test matrix validation with incorrect sums in columns: " + check);
 
         Assert.assertTrue(!check);
     }
