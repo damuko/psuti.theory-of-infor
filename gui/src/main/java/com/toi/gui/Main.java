@@ -8,22 +8,21 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    final static float MIN_HEIGHT = 500f;
-    final static float MIN_WIDTH = 500f;
-    @Override
-    public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("../../../mainStage/generator.fxml"));
+    private final static float MIN_HEIGHT = 500f;
+    private final static float MIN_WIDTH = 500f;
+    private final static String STAGE_TITLE = "Sequence Generator";
+    private final static String FXML_PATH = "../../../mainStage/generator.fxml";
 
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource(FXML_PATH));
+
+        primaryStage.setTitle(STAGE_TITLE);
         primaryStage.setMinHeight(MIN_HEIGHT);
         primaryStage.setMinWidth(MIN_WIDTH);
 
-        primaryStage.setTitle("Лабораторная работа №1");
-
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
-       /* FXMLLoader loader = new FXMLLoader();
-        GeneratorController controller = loader.getController();
-        controller.setMainApp(this);*/
     }
 
 
