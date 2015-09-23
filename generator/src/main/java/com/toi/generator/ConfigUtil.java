@@ -1,7 +1,9 @@
 package com.toi.generator;
 
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
 
@@ -64,13 +66,18 @@ public class ConfigUtil {
         return check;
     }
 
-    public static float[][] isTextValid(String text, Configuration cfg){
+    public static boolean isTextValid(String text, Configuration cfg) {
+        //TODO: add comparing between result matrix & probability matrix
+        return true;
+    }
+    public static float[][] calcResultProbabilityMatrix(String text, Configuration cfg){
         if (text.length() <= 1) return null;
 
         int textLength = text.length();
         int matrixSize = cfg.getMatrixProb().length;
         float[][] resultMatrix = new float[matrixSize][matrixSize];
         float[] resultSymbols = new float[matrixSize];
+
         for (int i = 0; i != textLength - 1; i++){
             char first, second;
 
@@ -89,13 +96,11 @@ public class ConfigUtil {
                 resultMatrix[i][j] /= resultSymbols[i];
             }
         }
-        //TODO: add comparing between result matrix & probability matrix
-//        return true;
 
         return resultMatrix;
     }
 
-    public  static char [] getSymbolsFromString (String str) throws Exception{
+    public  static char [] getSymbolsFromString (String str) throws IllegalArgumentException  {
         String [] substrings = str.split(",");
         char [] charArray = new char[substrings.length];
         for(int i=0; i< substrings.length; i++) {
@@ -103,9 +108,37 @@ public class ConfigUtil {
             if (currentStr.length() == 1
                     && Character.isLetterOrDigit(currentStr.charAt(0)))
                 charArray [i] = currentStr.charAt(0);
-            else throw new Exception("Please enter symbols and divide them by comma!");
+            else throw new IllegalArgumentException("Please enter symbols and divide them by comma!");
         }
         return charArray;
 
+    }
+    private static void saveTestConfiguration() {
+        Configuration testCfg = new Configuration();
+
+        testCfg.setSymbols(new char[]{'A', 'B', 'C'});
+        testCfg.setMatrixProb(
+                new float[][] {new float[]{0.1f, 0.2f, 0.7f},
+                        new float[] {0.4f, 0.5f, 0.1f},
+                        new float[] {0.3f,0.3f, 0.4f}
+                }
+//                new float[][] {new float[] {0.1f, 0.4f, 0.5f}}
+        );
+
+        try {
+
+            File file = new File("file.xml");
+            JAXBContext jaxbContext = JAXBContext.newInstance(Configuration.class);
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+
+            // output pretty printed
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+            jaxbMarshaller.marshal(testCfg, file);
+            jaxbMarshaller.marshal(testCfg, System.out);
+
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
     }
 }
