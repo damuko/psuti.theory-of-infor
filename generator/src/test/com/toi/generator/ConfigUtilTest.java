@@ -13,7 +13,7 @@ public class ConfigUtilTest {
                 new float[] {0.5f, 0.3f, 0.2f},
                 new float[] {0.2f, 0.3f, 0.5f}};
 
-        boolean check = ConfigUtil.checkMatrixProb(testUtilMatrix1);
+        boolean check = ConfigUtil.validateMatrixProb(testUtilMatrix1);
         System.out.println("Test validation matrix - Positive: " + check);
 
         Assert.assertTrue(check);
@@ -27,7 +27,7 @@ public class ConfigUtilTest {
                 new float[] {0.1f, 0.1f, 0.1f},
                 new float[] {0.1f, 0.1f, 0.1f}};
 
-        boolean check = ConfigUtil.checkMatrixProb(testUtilMatrix2);
+        boolean check = ConfigUtil.validateMatrixProb(testUtilMatrix2);
         System.out.println("Test validation matrix with all 0.1f: " + check);
 
         Assert.assertTrue(!check);
@@ -41,7 +41,7 @@ public class ConfigUtilTest {
                 new float[] {0.4f, 0.5f, 0.1f},
                 new float[] {0.3f,0.3f, 0.4f}};
 
-        boolean check = ConfigUtil.checkMatrixProb(testUtilMatrix3);
+        boolean check = ConfigUtil.validateMatrixProb(testUtilMatrix3);
         System.out.println("Test matrix validation with incorrect sums in collumns: " + check);
 
         Assert.assertTrue(!check);

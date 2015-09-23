@@ -23,8 +23,8 @@ public class ConfigUtil {
         return configuration;
     }
 
-    public static boolean checkMatrixProb(float[][] probMatrix) {
-        return isItSquareMatrix(probMatrix) && isRowsSumEquals1(probMatrix) && isColumnsSumEquals1(probMatrix);
+    public static boolean validateMatrixProb(float[][] probMatrix) {
+        return isItSquareMatrix(probMatrix) && isRowsSumEquals1(probMatrix) /*&& isColumnsSumEquals1(probMatrix)*/;
     }
 
     private static boolean isColumnsSumEquals1(float[][] probMatrix) {
