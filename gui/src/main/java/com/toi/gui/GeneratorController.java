@@ -31,19 +31,7 @@ public class GeneratorController {
     private TextArea generatedSequenceTextArea;
 
     @FXML
-    private Label statusLbl;
-
-    @FXML
-    private Label statusValueLbl;
-
-    @FXML
-    private Label condEntrLbl;
-
-    @FXML
     private Label condEntrValueLbl;
-
-    @FXML
-    private Label uncondentrLbl;
 
     @FXML
     private Label uncondEntrValueLbl;
@@ -90,7 +78,7 @@ public class GeneratorController {
 
             String generatedText = new com.toi.generator.Generator(cfg).getRandomText(generatedSeqSize);
 
-            outputResults(cfg, generatedText);
+            outputResults(cfg, generatedText, parsedMatrix);
         }
         catch (Exception e) {
             Alert validationMessage = new Alert(Alert.AlertType.ERROR,
@@ -99,13 +87,16 @@ public class GeneratorController {
         }
     }
 
-    private void outputResults(Configuration cfg, String generatedText) throws IOException {
+    private void outputResults(Configuration cfg, String generatedText, float [][] probMatrix) throws IOException {
         generatedSequenceTextArea.clear();
 
         float[][] resultMatrix = ConfigUtil.calcResultProbabilityMatrix(generatedText, cfg);
         printResultProbabilityMatrix(resultMatrix);
 
         writeToDefaultFile(generatedText);
+
+        condEntrValueLbl.setText(Float.toString(ConfigUtil.calculateConditionalEntropy(probMatrix)));
+        uncondEntrValueLbl.setText(Float.toString(ConfigUtil.calculateUnconditionalEntropy(probMatrix)));
     }
 
     private void printResultProbabilityMatrix(float[][] resultMatrix) {
