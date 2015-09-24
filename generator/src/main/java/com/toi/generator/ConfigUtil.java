@@ -142,13 +142,13 @@ public class ConfigUtil {
         }
     }
 
-    private static float calculateConditionalEntropy(float [][] probMatrix) {
+    public static float calculateConditionalEntropy(float [][] probMatrix) {
         float entropy =0;
         float probability =0;
         for(int i=0; i<probMatrix.length; i++) {
             for(int j=0; j< probMatrix[i].length; j++) {
                 for (int k=0; k< probMatrix.length; k++) {
-                    probability+=probMatrix[k] [j]=0;
+                    probability+=probMatrix[k] [j];
                 }
                 entropy+=probability+probMatrix[i][j]*Math.log(probMatrix[i][j]);
                 probability=0;
@@ -157,7 +157,7 @@ public class ConfigUtil {
         return -entropy;
     }
 
-    private static float calculateUnconditionalEntropy(float [][] probMatrix) {
+    public static float calculateUnconditionalEntropy(float [][] probMatrix) {
         float entropy =0;
         float probability =0;
         for(int i =0; i< probMatrix.length; i++) {
