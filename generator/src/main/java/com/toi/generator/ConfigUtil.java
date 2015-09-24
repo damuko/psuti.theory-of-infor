@@ -141,4 +141,32 @@ public class ConfigUtil {
             e.printStackTrace();
         }
     }
+
+    private static float calculateConditionalEntropy(float [][] probMatrix) {
+        float entropy =0;
+        float probability =0;
+        for(int i=0; i<probMatrix.length; i++) {
+            for(int j=0; j< probMatrix[i].length; j++) {
+                for (int k=0; k< probMatrix.length; k++) {
+                    probability+=probMatrix[k] [j]=0;
+                }
+                entropy+=probability+probMatrix[i][j]*Math.log(probMatrix[i][j]);
+                probability=0;
+            }
+        }
+        return -entropy;
+    }
+
+    private static float calculateUnconditionalEntropy(float [][] probMatrix) {
+        float entropy =0;
+        float probability =0;
+        for(int i =0; i< probMatrix.length; i++) {
+            for (int j=0; j<probMatrix[i].length; j++) {
+                probability+=probMatrix[i][j];
+            }
+            entropy+=probability*Math.log(probability)/Math.log(2);
+            probability=0;
+        }
+        return -entropy;
+    }
 }

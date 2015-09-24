@@ -36,6 +36,18 @@ public class GeneratorController {
     @FXML
     private Label statusValueLbl;
 
+    @FXML
+    private Label condEntrLbl;
+
+    @FXML
+    private Label condEntrValueLbl;
+
+    @FXML
+    private Label uncondentrLbl;
+
+    @FXML
+    private Label uncondEntrValueLbl;
+
 //    @FXML
 //    private TableColumn<Character, Integer> id;
 
