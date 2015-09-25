@@ -60,13 +60,13 @@
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
                               <Label prefHeight="17.0" prefWidth="131.0" text="Безусловная энтропия:" />
-                              <Label fx:id="condEntrValueLbl" />
+                              <Label fx:id="uncondEntrValueLbl" />
                            </children>
                         </HBox>
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
                               <Label prefHeight="17.0" prefWidth="116.0" text="Условная энтропия:" />
-                              <Label fx:id="uncondEntrValueLbl" />
+                              <Label fx:id="condEntrValueLbl" />
                            </children>
                         </HBox>
                      </children>
