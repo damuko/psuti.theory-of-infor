@@ -53,19 +53,28 @@
                      <children>
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <Label fx:id="statusLbl" prefHeight="17.0" prefWidth="70.0" text="Статус:" />
+                              <Label fx:id="statusLbl" prefHeight="17.0" prefWidth="70.0" text="Статус:">
+                                 <HBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </HBox.margin></Label>
                               <Label fx:id="statusValueLbl" />
                            </children>
                         </HBox>
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <Label prefHeight="17.0" prefWidth="131.0" text="Безусловная энтропия:" />
+                              <Label prefHeight="17.0" prefWidth="131.0" text="Безусловная энтропия:">
+                                 <HBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </HBox.margin></Label>
                               <Label fx:id="uncondEntrValueLbl" />
                            </children>
                         </HBox>
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <Label prefHeight="17.0" prefWidth="116.0" text="Условная энтропия:" />
+                              <Label prefHeight="17.0" prefWidth="116.0" text="Условная энтропия:">
+                                 <HBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </HBox.margin></Label>
                               <Label fx:id="condEntrValueLbl" />
                            </children>
                         </HBox>
