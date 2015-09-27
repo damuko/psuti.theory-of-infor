@@ -26,20 +26,26 @@ public class ConfigUtil {
     }
 
     public static boolean validateMatrixProb(float[][] probMatrix) {
-        return isItSquareMatrix(probMatrix) && isRowsSumEquals1(probMatrix) /*&& isColumnsSumEquals1(probMatrix)*/;
+        if(isItSquareMatrix(probMatrix)) {
+            return isRowsSumEquals1(probMatrix);
+        }
+        else {
+            if(isItVector(probMatrix)) {
+                return isColumnsSumEquals1(probMatrix);
+            }
+        }
+        return false;
+        //return isItSquareMatrix(probMatrix) && isRowsSumEquals1(probMatrix) /*&& isColumnsSumEquals1(probMatrix)*/;
     }
 
     private static boolean isColumnsSumEquals1(float[][] probMatrix) {
-        float sum;
+        float sum=0;
         int size = probMatrix.length;
         for (int i = 0; i != size; i++){
-            sum = 0;
-            for (int j = 0; j != size; j++){
-                sum += probMatrix[j][i];
-            }
-            if (sum != 1.0f) return false;
+            sum+=probMatrix[i][0];
         }
-        return true;
+        if (sum==1.0f) return true;
+        else return false;
     }
 
     private static boolean isRowsSumEquals1(float[][] probMatrix) {
@@ -55,7 +61,7 @@ public class ConfigUtil {
         return true;
     }
 
-    private static boolean isItSquareMatrix(float[][] probMatrix){
+    public static boolean isItSquareMatrix(float[][] probMatrix){
         int rows = probMatrix.length;
         boolean check = true;
         for (int i = 0; i != rows && check; i++){
@@ -66,9 +72,23 @@ public class ConfigUtil {
         return check;
     }
 
+    public  static boolean isItVector (float[][] probMatrix) {
+        boolean check = true;
+        for (int i = 0; i != probMatrix.length && check; i++){
+            if (probMatrix[i].length != 1){
+                check = false;
+            }
+        }
+        return check;
+    }
+
     public static boolean isTextValid(String text, Configuration cfg) {
         //TODO: add comparing between result matrix & probability matrix
         return true;
+    }
+    public static float [][] calcResultProbability(String text, Configuration cfg) {
+        if(isItSquareMatrix(cfg.getMatrixProb())) return calcResultProbabilityMatrix(text, cfg);
+        else return  calcResultProbabilityVector(text, cfg);
     }
     public static float[][] calcResultProbabilityMatrix(String text, Configuration cfg){
         if (text.length() <= 1) return null;
@@ -77,16 +97,16 @@ public class ConfigUtil {
         int matrixSize = cfg.getMatrixProb().length;
         float[][] resultMatrix = new float[matrixSize][matrixSize];
         float[] resultSymbols = new float[matrixSize];
+        char first, second;
+        int row, column;
 
         for (int i = 0; i != textLength - 1; i++){
-            char first, second;
-
             first = text.charAt(i);
             second = text.charAt(i + 1);
 
-            int row = cfg.getSymbolPosition(first);
+            row = cfg.getSymbolPosition(first);
             resultSymbols[row]++;
-            int column = cfg.getSymbolPosition(second);
+            column = cfg.getSymbolPosition(second);
 
             resultMatrix[row][column]++;
         }
@@ -95,6 +115,30 @@ public class ConfigUtil {
             for(int j = 0; j != matrixSize; j++){
                 resultMatrix[i][j] /= resultSymbols[i];
             }
+        }
+
+        return resultMatrix;
+    }
+    public static float[][] calcResultProbabilityVector(String text, Configuration cfg){
+        if (text.length() <= 1) return null;
+
+        int textLength = text.length();
+        int matrixSize = cfg.getMatrixProb().length;
+        float[][] resultMatrix = new float[matrixSize][1];
+        char first;
+        int row;
+
+        for (int i = 0; i != textLength - 1; i++){
+            first = text.charAt(i);
+
+            row = cfg.getSymbolPosition(first);
+
+            resultMatrix[row][0]++;
+        }
+
+        for (int i = 0; i != matrixSize; i++){
+                resultMatrix[i][0] /= text.length();
+
         }
 
         return resultMatrix;
