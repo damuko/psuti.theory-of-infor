@@ -7,7 +7,7 @@
     <groupId>com.toi</groupId>
     <artifactId>labs</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.0.2</version>
+    <version>0.0.0.3</version>
     <modules>
         <module>gui</module>
         <module>generator</module>
@@ -38,6 +38,7 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>6.9.6</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
