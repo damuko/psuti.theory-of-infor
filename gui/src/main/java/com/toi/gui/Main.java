@@ -8,10 +8,10 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    private final static float MIN_HEIGHT = 500f;
+    private final static float MIN_HEIGHT = 550f;
     private final static float MIN_WIDTH = 500f;
     private final static String STAGE_TITLE = "Sequence Generator";
-    private final static String FXML_PATH = "../../../mainStage/generator.fxml";
+    private final static String FXML_PATH = "/generator.fxml";
 
     @Override
     public void start(Stage primaryStage) throws Exception {
