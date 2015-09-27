@@ -1,5 +1,7 @@
 package com.toi.generator;
 
+import com.toi.generator.utils.ConfigurationUtils;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashMap;
@@ -23,7 +25,7 @@ public class Configuration {
     }
 
     private void validateProbMatrix(float[][] matrixProb) throws IllegalArgumentException{
-        if (!ConfigUtil.validateMatrixProb(matrixProb))
+        if (!ConfigurationUtils.validateMatrixProb(matrixProb))
             throw new IllegalArgumentException("Matrix has incorrect format!");
     }
     public char[] getSymbols() {

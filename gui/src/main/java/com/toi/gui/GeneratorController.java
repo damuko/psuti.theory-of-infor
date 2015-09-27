@@ -1,12 +1,14 @@
 package com.toi.gui;
 
-import com.toi.generator.ConfigUtil;
+import com.toi.generator.utils.ConfigurationUtils;
 import com.toi.generator.Configuration;
+import com.toi.generator.utils.GeneratorUtils;
 import javafx.fxml.FXML;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 
 import java.io.*;
+import java.lang.reflect.GenericArrayType;
 
 public class GeneratorController {
     @FXML
@@ -84,13 +86,13 @@ public class GeneratorController {
     private void outputResults(Configuration cfg, String generatedText, float [][] probMatrix) throws IOException {
         generatedSequenceTextArea.clear();
 
-        float[][] resultMatrix = ConfigUtil.calcResultProbability(generatedText, cfg);
+        float[][] resultMatrix = GeneratorUtils.calcResultProbability(generatedText, cfg);
         printResultProbabilityMatrix(resultMatrix);
 
         writeToDefaultFile(generatedText);
 
-        condEntrValueLbl.setText(Float.toString(ConfigUtil.calculateConditionalEntropy(probMatrix)));
-        uncondEntrValueLbl.setText(Float.toString(ConfigUtil.calculateUnconditionalEntropy(probMatrix)));
+        condEntrValueLbl.setText(Float.toString(GeneratorUtils.calculateConditionalEntropy(probMatrix)));
+        uncondEntrValueLbl.setText(Float.toString(GeneratorUtils.calculateUnconditionalEntropy(probMatrix)));
     }
 
     private void printResultProbabilityMatrix(float[][] resultMatrix) {
@@ -154,13 +156,13 @@ public class GeneratorController {
                 }
             }
         }
-        if (!ConfigUtil.validateMatrixProb(resultMatrix))
+        if (!ConfigurationUtils.validateMatrixProb(resultMatrix))
            throw new IllegalArgumentException("Probability matrix should be square. Rows sum should be equals to 1");
         return resultMatrix;
     }
 
     private char[] parseInitSymbols() throws Exception {
         String insertedText = insertedSymbolsTextArea.getText().trim();
-        return ConfigUtil.getSymbolsFromString(insertedText);
+        return ConfigurationUtils.getSymbolsFromString(insertedText);
     }
 }

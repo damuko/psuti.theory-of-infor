@@ -1,5 +1,7 @@
 package com.toi.generator;
 
+import com.toi.generator.utils.ConfigurationUtils;
+
 import java.util.Random;
 
 public class Generator {
@@ -13,7 +15,7 @@ public class Generator {
     }
 
     public String getRandomText(int length){
-        if(ConfigUtil.isItSquareMatrix(cfg.getMatrixProb())) return getRandomTextFromProbabilityMatrix(length);
+        if(ConfigurationUtils.isItSquareMatrix(cfg.getMatrixProb())) return getRandomTextFromProbabilityMatrix(length);
         else return getRandomTextFromVector(length);
     }
 
@@ -47,7 +49,7 @@ public class Generator {
     }
 
     private float [][] initSymbolsBorders () {
-        if (ConfigUtil.isItSquareMatrix(cfg.getMatrixProb())) return initMatrixSymbolsBorders();
+        if (ConfigurationUtils.isItSquareMatrix(cfg.getMatrixProb())) return initMatrixSymbolsBorders();
         else return initVectorSymbolsBorders();
 
     }
