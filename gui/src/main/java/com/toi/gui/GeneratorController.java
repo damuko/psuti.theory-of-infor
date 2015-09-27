@@ -56,7 +56,6 @@ public class GeneratorController {
 
     public void confirmButtonClicked()
     {
-        confirmProbButton.setDisable(true);
         executeGeneration();
     }
 
@@ -77,6 +76,7 @@ public class GeneratorController {
                 generatedText[0] = backgroundService.getValue();
                 try {
                     outputResults(cfg, generatedText[0], parsedMatrix);
+                    statusValueLbl.setText("Text generation is finished.");
                 } catch (IOException e) {
                     statusValueLbl.setText(e.getMessage());
                 }
@@ -86,6 +86,7 @@ public class GeneratorController {
                 confirmProbButton.setDisable(false);
                 statusValueLbl.setText(workerStateEvent.toString());
             });
+            confirmProbButton.setDisable(true);
             backgroundService.restart();
         }
         catch (Exception e) {
@@ -93,6 +94,7 @@ public class GeneratorController {
                     e.getMessage(), ButtonType.OK);
             validationMessage.showAndWait();
             statusValueLbl.setText(e.getMessage());
+            confirmProbButton.setDisable(false);
         }
     }
 
