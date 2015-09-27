@@ -36,12 +36,6 @@ public class GeneratorController {
     @FXML
     private Label uncondEntrValueLbl;
 
-//    @FXML
-//    private TableColumn<Character, Integer> id;
-
-//    @FXML
-//    private TableColumn<Character, Integer> probability;
-
     private char [] allSymbols;
 
     private ObservableList<float[]> probabilityMatrix;
@@ -90,7 +84,7 @@ public class GeneratorController {
     private void outputResults(Configuration cfg, String generatedText, float [][] probMatrix) throws IOException {
         generatedSequenceTextArea.clear();
 
-        float[][] resultMatrix = ConfigUtil.calcResultProbabilityMatrix(generatedText, cfg);
+        float[][] resultMatrix = ConfigUtil.calcResultProbability(generatedText, cfg);
         printResultProbabilityMatrix(resultMatrix);
 
         writeToDefaultFile(generatedText);
@@ -102,7 +96,7 @@ public class GeneratorController {
     private void printResultProbabilityMatrix(float[][] resultMatrix) {
         if (resultMatrix != null) {
             for (int i =0; i != resultMatrix.length; i++){
-                for (int j = 0; j != resultMatrix.length; j++) {
+                for (int j = 0; j != resultMatrix[i].length; j++) {
                     generatedSequenceTextArea.appendText(Float.toString(resultMatrix[i][j] ) + ',');
                 }
                 generatedSequenceTextArea.appendText("\n");
@@ -142,19 +136,23 @@ public class GeneratorController {
         for (int i = 0; i!= lines.length; i++) {
             String[] values = lines[i].split(",");
 
-            if (values.length != lines.length || values.length != allSymbols.length)
-                throw new IllegalArgumentException("Input size is incorrect!");
-
+            if(values.length==1) {
+                if (lines.length!=allSymbols.length)
+                    throw new IllegalArgumentException("Input size is incorrect!");
+            }
+            else {
+                if (values.length != lines.length || values.length != allSymbols.length)
+                    throw new IllegalArgumentException("Input size is incorrect!");
+            }
 
             resultMatrix[i] = new float[values.length];
             for (int j = 0; j != values.length; j++){
                 try {
-                    resultMatrix[i][j] = Float.parseFloat(values[j]);
+                        resultMatrix [i][j]= Float.parseFloat(values[j]);
                 } catch (NumberFormatException nfe){
                     throw new NumberFormatException("Use only numeric values to enter!");
                 }
             }
-
         }
         if (!ConfigUtil.validateMatrixProb(resultMatrix))
            throw new IllegalArgumentException("Probability matrix should be square. Rows sum should be equals to 1");
