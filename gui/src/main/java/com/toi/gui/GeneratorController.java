@@ -1,14 +1,14 @@
 package com.toi.gui;
 
-import com.toi.generator.utils.ConfigurationUtils;
 import com.toi.generator.Configuration;
+import com.toi.generator.utils.ConfigurationUtils;
 import com.toi.generator.utils.GeneratorUtils;
 import javafx.fxml.FXML;
-import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 
-import java.io.*;
-import java.lang.reflect.GenericArrayType;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class GeneratorController {
     @FXML
@@ -18,16 +18,10 @@ public class GeneratorController {
     private TextArea probabilityInputArea;
 
     @FXML
-    private TableView<float[]> probabilityTable;
-
-    @FXML
     private TextField symbolsQuantityField;
 
     @FXML
     private Button confirmProbButton;
-
-    @FXML
-    private Button confirmSymbolsButton;
 
     @FXML
     private TextArea generatedSequenceTextArea;
@@ -38,9 +32,14 @@ public class GeneratorController {
     @FXML
     private Label uncondEntrValueLbl;
 
-    private char [] allSymbols;
+    @FXML
+    private Label statusValueLbl;
 
-    private ObservableList<float[]> probabilityMatrix;
+    @FXML
+    private ProgressIndicator generationIndicator;
+
+    @FXML
+    private char [] allSymbols;
 
     public void setInsertedSymbolsText(String txt){
         insertedSymbolsTextArea.setText(txt);
@@ -54,12 +53,10 @@ public class GeneratorController {
         this.confirmProbButton.fire();
     }
 
-    public void clickConfirmSymbolsButton(){
-        this.confirmSymbolsButton.fire();
-    }
 
     public void confirmButtonClicked()
     {
+        confirmProbButton.setDisable(true);
         executeGeneration();
     }
 
@@ -71,15 +68,31 @@ public class GeneratorController {
 
             Configuration cfg = new Configuration(allSymbols,parsedMatrix);
             int generatedSeqSize = getSequenceSize();
+            final GeneratorService backgroundService = new GeneratorService(cfg,generatedSeqSize);
 
-            String generatedText = new com.toi.generator.Generator(cfg).getRandomText(generatedSeqSize);
+            generationIndicator.visibleProperty().bind(backgroundService.runningProperty());
+            final String[] generatedText = {""};
+            backgroundService.setOnSucceeded(workerStateEvent -> {
+                confirmProbButton.setDisable(false);
+                generatedText[0] = backgroundService.getValue();
+                try {
+                    outputResults(cfg, generatedText[0], parsedMatrix);
+                } catch (IOException e) {
+                    statusValueLbl.setText(e.getMessage());
+                }
+            });
 
-            outputResults(cfg, generatedText, parsedMatrix);
+            backgroundService.setOnFailed(workerStateEvent -> {
+                confirmProbButton.setDisable(false);
+                statusValueLbl.setText(workerStateEvent.toString());
+            });
+            backgroundService.restart();
         }
         catch (Exception e) {
             Alert validationMessage = new Alert(Alert.AlertType.ERROR,
                     e.getMessage(), ButtonType.OK);
             validationMessage.showAndWait();
+            statusValueLbl.setText(e.getMessage());
         }
     }
 
