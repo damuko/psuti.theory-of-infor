@@ -7,22 +7,26 @@ import javafx.concurrent.Task;
 
 public class GeneratorService extends Service<String> {
 
-    private Configuration cfg;
+    private Configuration configuration;
     private int sequenceSize;
-
-    public GeneratorService(Configuration cfg, int sequenceSize) {
-        this.cfg = cfg;
-        this.sequenceSize = sequenceSize;
-    }
-
 
     @Override
     protected Task<String> createTask() {
         return new Task<String>() {
             @Override
             protected String call() throws Exception {
-                return new com.toi.generator.Generator(cfg).getRandomText(sequenceSize);
+                if (configuration == null || sequenceSize == 0)
+                    throw new ExceptionInInitializerError("Please set configuration and sequenceSize properties.");
+                return new com.toi.generator.Generator(configuration).getRandomText(sequenceSize);
             }
         };
+    }
+
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
+    }
+
+    public void setSequenceSize(int sequenceSize) {
+        this.sequenceSize = sequenceSize;
     }
 }
