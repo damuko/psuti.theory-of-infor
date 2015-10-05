@@ -1,16 +1,8 @@
-package huffman;
+package com.toi.coding.huffman;
 
 import java.util.*;
 
-abstract class HuffmanTree implements Comparable<HuffmanTree> {
-    public final float probability; // the probability of this tree
-    public HuffmanTree(float prob) { probability = prob; }
 
-    // compares on the probability
-    public int  compareTo(HuffmanTree tree) {
-        return (int) probability *100 - (int)tree.probability *100;
-    }
-}
 
 //leaf - node without children nodes
 class HuffmanLeaf extends HuffmanTree {
@@ -19,6 +11,10 @@ class HuffmanLeaf extends HuffmanTree {
     public HuffmanLeaf(int freq, char val) {
         super(freq);
         value = val;
+    }
+    @Override
+    public String toString(){
+        return String.format("[%s - %f]", value,probability);
     }
 }
 
@@ -38,6 +34,7 @@ public class HuffmanCode {
     public static HuffmanTree buildTree(char [] charArray, float [][] prob) {
         //create queue beginning with least element
         PriorityQueue<HuffmanTree> trees = new PriorityQueue<HuffmanTree>();
+
         float probCount=0;
         // initially, we have a forest of leaves
         // one for each non-empty character
@@ -45,10 +42,14 @@ public class HuffmanCode {
             for(int j=0; j<prob[0].length; j++) {
                 probCount+=prob[i][j];
             }
-            trees.offer(new HuffmanLeaf ((int)(probCount*100), charArray[i]));
+            trees.offer(new HuffmanLeaf ((int)(probCount*HuffmanTree.HUNDRED_PERCENTS), charArray[i]));
             probCount=0;
         }
 
+        Object[] treeArray = trees.toArray();
+        for(int i=0; i!=trees.size(); i++ ) {
+            System.out.println(treeArray[i]);
+        }
         assert trees.size() > 0;
         // loop until there is only one tree left
         while (trees.size() > 1) {
@@ -63,12 +64,13 @@ public class HuffmanCode {
     }
 
     public static void printCodes(HuffmanTree tree, StringBuffer prefix) {
+        BitSet bits = new BitSet();
         assert tree != null;
         if (tree instanceof HuffmanLeaf) {
             HuffmanLeaf leaf = (HuffmanLeaf) tree;
 
             // print out character, probability, and code for this leaf (which is just the prefix)
-            System.out.println(leaf.value + "\t" + leaf.probability + "\t" + prefix);
+            System.out.println(leaf.value + "\t\t" + leaf.probability + "\t\t" + prefix);
 
         } else if (tree instanceof HuffmanNode) {
             HuffmanNode node = (HuffmanNode) tree;
