@@ -12,7 +12,5 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="TEST" name="Maven: org.testng:testng:6.9.6" level="project" />
-    <orderEntry type="library" name="testng-6.7" level="project" />
   </component>
 </module>
-

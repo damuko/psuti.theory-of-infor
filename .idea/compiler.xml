@@ -32,12 +32,20 @@
         <processorPath useClasspath="true" />
         <module name="gui" />
       </profile>
+      <profile default="false" name="Annotation profile for coding" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="coding" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="coding" target="1.8" />
       <module name="generator" target="1.8" />
       <module name="gui" target="1.8" />
       <module name="lab1" target="1.8" />
+      <module name="labs" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
-
