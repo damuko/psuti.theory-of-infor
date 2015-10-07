@@ -1,5 +1,7 @@
 package com.toi.coding.huffman;
 
+import com.sun.istack.internal.NotNull;
+
 public abstract class HuffmanTree implements Comparable<HuffmanTree> {
     //its using to cast float probability to int
     public final static int HUNDRED_PERCENTS = 100;

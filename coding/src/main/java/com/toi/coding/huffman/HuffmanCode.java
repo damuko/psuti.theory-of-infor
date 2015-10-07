@@ -33,7 +33,7 @@ public class HuffmanCode {
     // input is an array of frequencies, indexed by character code
     public static HuffmanTree buildTree(char [] charArray, float [][] prob) {
         //create queue beginning with least element
-        PriorityQueue<HuffmanTree> trees = new PriorityQueue<HuffmanTree>();
+        PriorityQueue<HuffmanTree> trees = new PriorityQueue<>();
 
         float probCount=0;
         // initially, we have a forest of leaves
@@ -46,10 +46,6 @@ public class HuffmanCode {
             probCount=0;
         }
 
-        Object[] treeArray = trees.toArray();
-        for(int i=0; i!=trees.size(); i++ ) {
-            System.out.println(treeArray[i]);
-        }
         assert trees.size() > 0;
         // loop until there is only one tree left
         while (trees.size() > 1) {
@@ -62,9 +58,34 @@ public class HuffmanCode {
         }
         return trees.poll();
     }
+    public static Map<Character,String> createHeader(HuffmanTree tree, StringBuilder prefix, Map<Character, String> dictionary){
+//        Map<Character, String> dictionary = new HashMap<>();
+        assert tree != null;
+        if (tree instanceof HuffmanLeaf) {
+            HuffmanLeaf leaf = (HuffmanLeaf) tree;
 
+            dictionary.put(leaf.value, prefix.toString());
+            // print out character, probability, and code for this leaf (which is just the prefix)
+//            System.out.println(leaf.value + "\t\t" + leaf.probability + "\t\t" + prefix);
+
+        } else if (tree instanceof HuffmanNode) {
+            HuffmanNode node = (HuffmanNode) tree;
+
+            // traverse left
+            prefix.append('0');
+            createHeader(node.left, prefix, dictionary);
+            prefix.deleteCharAt(prefix.length() - 1);
+
+            // traverse right
+            prefix.append('1');
+            createHeader(node.right, prefix, dictionary);
+            prefix.deleteCharAt(prefix.length() - 1);
+        }
+
+
+        return dictionary;
+    }
     public static void printCodes(HuffmanTree tree, StringBuffer prefix) {
-        BitSet bits = new BitSet();
         assert tree != null;
         if (tree instanceof HuffmanLeaf) {
             HuffmanLeaf leaf = (HuffmanLeaf) tree;
