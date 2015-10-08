@@ -5,12 +5,14 @@ import com.toi.coding.huffman.HuffmanTree;
 import org.apache.log4j.Logger;
 
 import java.io.*;
+import java.nio.file.NoSuchFileException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class HuffmanCoder {
     private final static Logger logger = Logger.getLogger(HuffmanCoder.class);
 
+    //TODO: make some refactoring
     @SuppressWarnings("unchecked")
     private static void encodeSymbols(ByteArrayOutputStream bos, Map header, final String text) {
         if (text.isEmpty())
@@ -66,7 +68,7 @@ public class HuffmanCoder {
             logger.error("An error occured during writing to output stream.");
         }
     }
-
+//todo: add calculating probability from text
     private static void writeHeader(ByteArrayOutputStream bos, Map header) {
         BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(bos);
         try (ObjectOutputStream os = new ObjectOutputStream(bufferedOutputStream)){
@@ -152,9 +154,18 @@ public class HuffmanCoder {
         logger.info("Restored string is \"" + restoredString + "\"");
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
-        encodeSymbols(byteArrayOutputStream, dictionary, "ddddaabf");
-
+//        encodeSymbols(byteArrayOutputStream, dictionary, "ddddaabf");
+        writeHeader(byteArrayOutputStream, dictionary);
+        encodeSymbols(byteArrayOutputStream, dictionary, "");
         ByteArrayInputStream encodedStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+
+        File resFile = new File("res.bin");
+        if (!resFile.exists())
+            resFile.createNewFile();
+
+        FileOutputStream fos = new FileOutputStream(resFile);
+
+        fos.write(byteArrayOutputStream.toByteArray());
 
         StringBuilder resStr = new StringBuilder();
         logger.info("Available bytes: " + encodedStream.available());
