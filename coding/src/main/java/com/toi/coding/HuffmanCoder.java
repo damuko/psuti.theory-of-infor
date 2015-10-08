@@ -11,19 +11,71 @@ import java.util.Map;
 public class HuffmanCoder {
     private final static Logger logger = Logger.getLogger(HuffmanCoder.class);
 
+    @SuppressWarnings("unchecked")
+    private static void encodeSymbols(ByteArrayOutputStream bos, Map header, final String text) {
+        if (text.isEmpty())
+            return;
 
-    private static void writeHeader(ByteArrayOutputStream bos, HuffmanTree tree) {
+        try {
+            BufferedOutputStream buffStream = new BufferedOutputStream(bos); //TODO: investigate what buff size is the best
+            Map<Character,String> cHeader = (Map<Character,String>)header;
 
-        Map<Character,String> headerDictionary =
-                HuffmanCode.createHeader(tree,new StringBuilder(), new HashMap<>());
+            byte currPosition = 0;
+            short currByte = 0;
+            for (int i = 0; i != text.length(); i++){
+                Character c = text.charAt(i);
+                String prefix = cHeader.get(c);
+                //handle incorrect headers
+                if (prefix != null) {
+                    for (char currBit : prefix.toCharArray()){
+                        currByte <<= 1;
 
-        try (ObjectOutputStream os = new ObjectOutputStream(bos)){
-            os.writeObject(headerDictionary);
+                        if (currBit == '1'){
+                            currByte |=  1;
+                        }
+                        currPosition++;
+
+                        //TODO: add handling for 256> symbols in prefix
+                        if (currPosition == 8) {
+
+                            byte converted = (byte)currByte;
+                            buffStream.write(converted);
+                            currPosition = 0;
+                            currByte = 0;
+                        }
+                    }
+
+
+                } else {
+                    logger.error("Header does not contain prefix for this symbol: " + c);
+                    return;
+                }
+            }
+            if (currPosition != 0) { //TODO: modify to support byte[] buffer
+                int lastBits = 8 - currPosition;
+                currByte <<= lastBits;
+                buffStream.write(currByte);
+                buffStream.write(lastBits);
+            }
+            buffStream.flush();
+            buffStream.close();
+        } catch (ClassCastException cce){
+            logger.error("Incorrect header value. Are you sure that header " +
+                    "contains <Character,String> entries?",cce);
+        } catch (IOException e) {
+            logger.error("An error occured during writing to output stream.");
+        }
+    }
+
+    private static void writeHeader(ByteArrayOutputStream bos, Map header) {
+        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(bos);
+        try (ObjectOutputStream os = new ObjectOutputStream(bufferedOutputStream)){
+            os.writeObject(header);
 
             os.flush();
             os.close();
         } catch (IOException e) {
-            logger.error("An error occurred during writing an encoded file header.", e);
+            logger.error("An error occurred during writing an file header.", e);
         }
 
     }
@@ -37,12 +89,16 @@ public class HuffmanCoder {
                 restoredHeader = (Map)restoredObj;
             else throw new ClassCastException();
         } catch (ClassNotFoundException | IOException | ClassCastException e) {
-            logger.error("An error occurred during reading an encoded file header.", e);
+            logger.error("An error occurred during reading an file header.", e);
         }
         return restoredHeader;
     }
 
     public static void main(String[] args) throws IOException {
+        demo();
+    }
+
+    private static void demo() throws IOException {
         //init
         float [][] prob = new float[][] {
                 new float[] {0.1f},
@@ -65,7 +121,8 @@ public class HuffmanCoder {
     private static void showWriteReadHeader(HuffmanTree tree) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         //write our header to stream
-        writeHeader(bos, tree);
+        Map dictionary = HuffmanCode.createHeader(tree, new StringBuilder(), new HashMap<>());
+        writeHeader(bos, dictionary);
 
         //add some garbage to stream
         String dummyStuff = "Some dummy stuff";
@@ -92,6 +149,20 @@ public class HuffmanCoder {
         String restoredString = new String(dummyStringBytes);
 
         logger.info("Garbage size in bytes is " + length);
-        logger.info("Restored string is \"" + restoredString +"\"");
+        logger.info("Restored string is \"" + restoredString + "\"");
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        encodeSymbols(byteArrayOutputStream, dictionary, "ddddaabf");
+
+        ByteArrayInputStream encodedStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+
+        StringBuilder resStr = new StringBuilder();
+        logger.info("Available bytes: " + encodedStream.available());
+        int av = encodedStream.available();
+        for (int i = 0; i != av; i++) {
+            int res = encodedStream.read();
+            resStr.append(String.format("%8s",Integer.toBinaryString(res)).replace(' ','0'));
+        }
+        logger.info("Result: " + resStr);
     }
 }
