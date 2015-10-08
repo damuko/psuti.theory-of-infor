@@ -38,6 +38,7 @@ public class HuffmanCode {
         float probCount=0;
         // initially, we have a forest of leaves
         // one for each non-empty character
+        //TODO: replace matrix to vector
         for(int i=0; i< prob.length; i++) {
             for(int j=0; j<prob[0].length; j++) {
                 probCount+=prob[i][j];
