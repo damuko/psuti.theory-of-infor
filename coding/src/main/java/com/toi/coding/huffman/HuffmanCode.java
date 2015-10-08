@@ -59,14 +59,11 @@ public class HuffmanCode {
         return trees.poll();
     }
     public static Map<Character,String> createHeader(HuffmanTree tree, StringBuilder prefix, Map<Character, String> dictionary){
-//        Map<Character, String> dictionary = new HashMap<>();
         assert tree != null;
         if (tree instanceof HuffmanLeaf) {
             HuffmanLeaf leaf = (HuffmanLeaf) tree;
 
             dictionary.put(leaf.value, prefix.toString());
-            // print out character, probability, and code for this leaf (which is just the prefix)
-//            System.out.println(leaf.value + "\t\t" + leaf.probability + "\t\t" + prefix);
 
         } else if (tree instanceof HuffmanNode) {
             HuffmanNode node = (HuffmanNode) tree;
