@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <packaging>jar</packaging>
-    <artifactId>gui</artifactId>
+    <artifactId>generator-gui</artifactId>
     <version>0.0.0.2</version>
 
     <parent>
         <artifactId>labs</artifactId>
         <groupId>com.toi</groupId>
-        <version>0.0.0.2</version>
+        <version>0.0.0.3</version>
     </parent>
     <dependencies>
         <dependency>

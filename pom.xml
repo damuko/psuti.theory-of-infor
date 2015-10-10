@@ -9,7 +9,7 @@
     <packaging>pom</packaging>
     <version>0.0.0.3</version>
     <modules>
-        <module>gui</module>
+        <module>generator-gui</module>
         <module>generator</module>
         <module>coding</module>
     </modules>
