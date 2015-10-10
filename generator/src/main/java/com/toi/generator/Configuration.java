@@ -25,7 +25,7 @@ public class Configuration {
     }
 
     private void validateProbMatrix(float[][] matrixProb) throws IllegalArgumentException{
-        if (!ConfigurationUtils.validateMatrixProb(matrixProb))
+        if (!ConfigurationUtils.validateProbabilityMatrix(matrixProb))
             throw new IllegalArgumentException("Matrix has incorrect format!");
     }
     public char[] getSymbols() {

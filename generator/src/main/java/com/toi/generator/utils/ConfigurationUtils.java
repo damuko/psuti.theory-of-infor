@@ -27,7 +27,7 @@ public class ConfigurationUtils {
         return configuration;
     }
 
-    public static boolean validateMatrixProb(float[][] probMatrix) {
+    public static boolean validateProbabilityMatrix(float[][] probMatrix) {
         if(isItSquareMatrix(probMatrix)) {
             return isRowsSumEquals1(probMatrix);
         }
@@ -81,9 +81,6 @@ public class ConfigurationUtils {
         }
         return check;
     }
-
-
-
 
     public  static char [] getSymbolsFromString (String str) throws IllegalArgumentException  {
         String [] substrings = str.split(",");
