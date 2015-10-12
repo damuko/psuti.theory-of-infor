@@ -31,7 +31,7 @@ class HuffmanNode extends HuffmanTree {
 
 public class HuffmanCode {
     // input is an array of frequencies, indexed by character code
-    public static HuffmanTree buildTree(char [] charArray, float [][] prob) {
+    public static HuffmanTree buildTree(char [] charArray, float []prob) {
         //create queue beginning with least element
         PriorityQueue<HuffmanTree> trees = new PriorityQueue<>();
 
@@ -40,10 +40,7 @@ public class HuffmanCode {
         // one for each non-empty character
         //TODO: replace matrix to vector
         for(int i=0; i< prob.length; i++) {
-            for(int j=0; j<prob[0].length; j++) {
-                probCount+=prob[i][j];
-            }
-            trees.offer(new HuffmanLeaf ((int)(probCount*HuffmanTree.HUNDRED_PERCENTS), charArray[i]));
+            trees.offer(new HuffmanLeaf ((int)(prob[i]*HuffmanTree.HUNDRED_PERCENTS), charArray[i]));
             probCount=0;
         }
 
