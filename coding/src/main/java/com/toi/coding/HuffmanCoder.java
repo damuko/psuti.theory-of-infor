@@ -108,17 +108,46 @@ public class HuffmanCoder {
 //                new float [] {0.265f},
 //                new float [] {0.18f},
 //                new float[] {0.12f}};
-        char [] charArray = {'a', 'b', 'c', 'd', 'f', 'e'};
-
-        String  text = readSequenceFromFile("generated_sequence.txt");
-        float [] prob = getProbabilityVector(text, getSymbolsMap(readSequenceFromFile("test.txt")));
+//        char [] charArray = {'a', 'b', 'c', 'd', 'f', 'e'};
+        final String TO_ENCODE_FILE_NAME = "generated_sequence.txt";
+        String  text = readSequence(TO_ENCODE_FILE_NAME);
+//        float [] prob = getProbabilityVector(text, getSymbolsProbability(readSequence(TO_ENCODE_FILE_NAME)));
+        Map<Character, Float> symbolsMap = getSymbolsProbability(text);
         // build tree
-        HuffmanTree tree = HuffmanCode.buildTree(charArray, prob);
+        HuffmanTree tree = HuffmanCode.buildTree(symbolsMap);
 
         // print out results
         logger.info("SYMBOL\tHUFFMAN CODE");
-
         showWriteReadHeader(tree);
+    }
+
+    private  static  String readSequence(String filePath) {
+        String sequence= null;
+        try {
+            BufferedReader bf = new BufferedReader(new FileReader(filePath));
+            sequence=bf.readLine();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        return sequence;
+    }
+
+    private static Map <Character, Float> getSymbolsProbability(String sequence){
+        Map <Character, Float> symbolsMap = new HashMap<>();
+        int seqSize = sequence.length();
+        for (int i=0; i< seqSize; i++) {
+            char c = sequence.charAt(i);
+            Float currProb = symbolsMap.get(c);
+            if (currProb == null) {
+                currProb = 0.0f;
+            }
+            symbolsMap.put(c, ++currProb);
+        }
+        for (Map.Entry<Character, Float> c : symbolsMap.entrySet()){
+            symbolsMap.put(c.getKey(),c.getValue() / seqSize);
+        }
+
+        return symbolsMap;
     }
 
     private static void showWriteReadHeader(HuffmanTree tree) throws IOException {
@@ -140,8 +169,8 @@ public class HuffmanCoder {
             Map.Entry entry = (Map.Entry) o;
 
             logger.info(String.format("%s\t\t%s"
-                    , entry.getKey()
-                    , entry.getValue())
+                            , entry.getKey()
+                            , entry.getValue())
             );
 
         }
@@ -176,57 +205,5 @@ public class HuffmanCoder {
             resStr.append(String.format("%8s",Integer.toBinaryString(res)).replace(' ','0'));
         }
         logger.info("Result: " + resStr);
-    }
-
-    private  static  String readSequenceFromFile(String path) {
-        String sequence= null;
-        try {
-            BufferedReader bf = new BufferedReader(new FileReader("test.txt"));
-            sequence=bf.readLine();
-        }
-        catch (FileNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
-        catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-        return sequence;
-    }
-    private static float[] getProbabilityVector(String text, Map<Character, Integer> symbolsMap) {
-        if (text.length() <= 1) return null;
-
-        int textLength = text.length();
-        float[] resultMatrix = new float[symbolsMap.size()];
-        char first;
-
-        for (int i = 0; i != textLength - 1; i++) {
-            first = text.charAt(i);
-
-            resultMatrix[symbolsMap.get(first)]++;
-        }
-
-        for (int i = 0; i != symbolsMap.size(); i++) {
-            resultMatrix[i] /= text.length();
-
-        }
-        return resultMatrix;
-    }
-
-//    private static Map getSymbolsMap (char [] charArray) {
-//         Map<Character, Integer> symbolsMap= new HashMap<>();
-//        for (int i=0; i< charArray.length; i++) {
-//            symbolsMap.put(charArray[i], i);
-//        }
-//        return symbolsMap;
-//    }
-
-    private static Map <Character, Integer> getSymbolsMap(String sequence){
-        Map <Character, Integer> symbolsMap = new HashMap<>();
-        for (int i=0; i<sequence.length(); i++) {
-            if (!symbolsMap.containsValue(sequence.charAt(i))) {
-               symbolsMap.put(sequence.charAt(i), i);
-            }
-        }
-        return symbolsMap;
     }
 }
