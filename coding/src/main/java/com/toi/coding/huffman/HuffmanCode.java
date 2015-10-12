@@ -14,7 +14,7 @@ class HuffmanLeaf extends HuffmanTree {
     }
     @Override
     public String toString(){
-        return String.format("[%s - %f]", value,probability);
+        return String.format("[%s - %d]", value,probability);
     }
 }
 
@@ -31,17 +31,16 @@ class HuffmanNode extends HuffmanTree {
 
 public class HuffmanCode {
     // input is an array of frequencies, indexed by character code
-    public static HuffmanTree buildTree(char [] charArray, float []prob) {
+    public static HuffmanTree buildTree(Map<Character,Float> symbols) {
         //create queue beginning with least element
         PriorityQueue<HuffmanTree> trees = new PriorityQueue<>();
 
-        float probCount=0;
+//        float probCount=0;
         // initially, we have a forest of leaves
         // one for each non-empty character
-        //TODO: replace matrix to vector
-        for(int i=0; i< prob.length; i++) {
-            trees.offer(new HuffmanLeaf ((int)(prob[i]*HuffmanTree.HUNDRED_PERCENTS), charArray[i]));
-            probCount=0;
+        //TODO: add convert float probability to integer priority (1..10)
+        for(Map.Entry<Character,Float> c : symbols.entrySet()) {
+            trees.offer(new HuffmanLeaf ((int)(c.getValue()*HuffmanTree.HUNDRED_PERCENTS), c.getKey()));
         }
 
         assert trees.size() > 0;
