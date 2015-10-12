@@ -5,7 +5,6 @@ import com.toi.coding.huffman.HuffmanTree;
 import org.apache.log4j.Logger;
 
 import java.io.*;
-import java.nio.file.NoSuchFileException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -102,15 +101,17 @@ public class HuffmanCoder {
 
     private static void demo() throws IOException {
         //init
-        float [][] prob = new float[][] {
-                new float[] {0.1f},
-                new float[] {0.2f},
-                new float [] {0.135f},
-                new float [] {0.265f},
-                new float [] {0.18f},
-                new float[] {0.12f}};
+//        float [][] prob = new float[][] {
+//                new float[] {0.1f},
+//                new float[] {0.2f},
+//                new float [] {0.135f},
+//                new float [] {0.265f},
+//                new float [] {0.18f},
+//                new float[] {0.12f}};
         char [] charArray = {'a', 'b', 'c', 'd', 'f', 'e'};
 
+        String  text = readSequenceFromFile("generated_sequence.txt");
+        float [] prob = getProbabilityVector(text, getSymbolsMap(readSequenceFromFile("test.txt")));
         // build tree
         HuffmanTree tree = HuffmanCode.buildTree(charArray, prob);
 
@@ -175,5 +176,57 @@ public class HuffmanCoder {
             resStr.append(String.format("%8s",Integer.toBinaryString(res)).replace(' ','0'));
         }
         logger.info("Result: " + resStr);
+    }
+
+    private  static  String readSequenceFromFile(String path) {
+        String sequence= null;
+        try {
+            BufferedReader bf = new BufferedReader(new FileReader("test.txt"));
+            sequence=bf.readLine();
+        }
+        catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        return sequence;
+    }
+    private static float[] getProbabilityVector(String text, Map<Character, Integer> symbolsMap) {
+        if (text.length() <= 1) return null;
+
+        int textLength = text.length();
+        float[] resultMatrix = new float[symbolsMap.size()];
+        char first;
+
+        for (int i = 0; i != textLength - 1; i++) {
+            first = text.charAt(i);
+
+            resultMatrix[symbolsMap.get(first)]++;
+        }
+
+        for (int i = 0; i != symbolsMap.size(); i++) {
+            resultMatrix[i] /= text.length();
+
+        }
+        return resultMatrix;
+    }
+
+//    private static Map getSymbolsMap (char [] charArray) {
+//         Map<Character, Integer> symbolsMap= new HashMap<>();
+//        for (int i=0; i< charArray.length; i++) {
+//            symbolsMap.put(charArray[i], i);
+//        }
+//        return symbolsMap;
+//    }
+
+    private static Map <Character, Integer> getSymbolsMap(String sequence){
+        Map <Character, Integer> symbolsMap = new HashMap<>();
+        for (int i=0; i<sequence.length(); i++) {
+            if (!symbolsMap.containsValue(sequence.charAt(i))) {
+               symbolsMap.put(sequence.charAt(i), i);
+            }
+        }
+        return symbolsMap;
     }
 }
