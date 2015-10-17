@@ -2,6 +2,7 @@ package com.toi.coding;
 
 import com.toi.coding.huffman.HuffmanCode;
 import com.toi.coding.huffman.HuffmanTree;
+import com.toi.decoding.HuffmanDecoder;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -81,7 +82,7 @@ public class HuffmanCoder {
 
     }
 
-    private static Map readHeader(ByteArrayInputStream bis) {
+    /*private static Map readHeader(ByteArrayInputStream bis) {
         Map restoredHeader = null;
 
         try(ObjectInputStream ois = new ObjectInputStream(bis)) {
@@ -93,7 +94,7 @@ public class HuffmanCoder {
             logger.error("An error occurred during reading an file header.", e);
         }
         return restoredHeader;
-    }
+    }*/
 
     public static void main(String[] args) throws IOException {
         demo();
@@ -180,7 +181,7 @@ public class HuffmanCoder {
 
         //restore header from stream
         ByteArrayInputStream bais = new ByteArrayInputStream(bos.toByteArray());
-        Map restoredMap = readHeader(bais);
+        Map restoredMap = HuffmanDecoder.readHeader(bais);
 
         for (Object o : restoredMap.entrySet()) {
             Map.Entry entry = (Map.Entry) o;
@@ -217,8 +218,9 @@ public class HuffmanCoder {
         StringBuilder resStr = new StringBuilder();
         logger.info("Available bytes: " + encodedStream.available());
         int av = encodedStream.available();
+        int res;
         for (int i = 0; i != av; i++) {
-            int res = encodedStream.read();
+            res = encodedStream.read();
             resStr.append(String.format("%8s",Integer.toBinaryString(res)).replace(' ','0'));
         }
         logger.info("Result: " + resStr);
