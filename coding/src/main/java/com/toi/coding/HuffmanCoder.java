@@ -118,7 +118,8 @@ public class HuffmanCoder {
 
         // print out results
         logger.info("SYMBOL\tHUFFMAN CODE");
-        showWriteReadHeader(tree);
+       // showWriteReadHeader(tree);
+        writeEncodedSequence(tree, text);
     }
 
     private  static  String readSequence(String filePath) {
@@ -150,6 +151,22 @@ public class HuffmanCoder {
         return symbolsMap;
     }
 
+    private static void writeEncodedSequence(HuffmanTree tree, String text) throws IOException {
+        Map dictionary = HuffmanCode.createHeader(tree, new StringBuilder(), new HashMap<>());
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        writeHeader(byteArrayOutputStream, dictionary);
+        encodeSymbols(byteArrayOutputStream, dictionary, text);
+
+        File resFile = new File("res2.bin");
+        if (!resFile.exists())
+            resFile.createNewFile();
+
+        FileOutputStream fos = new FileOutputStream(resFile);
+
+        fos.write(byteArrayOutputStream.toByteArray());
+
+    }
     private static void showWriteReadHeader(HuffmanTree tree) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         //write our header to stream
@@ -186,7 +203,7 @@ public class HuffmanCoder {
 
 //        encodeSymbols(byteArrayOutputStream, dictionary, "ddddaabf");
         writeHeader(byteArrayOutputStream, dictionary);
-        encodeSymbols(byteArrayOutputStream, dictionary, "");
+        encodeSymbols(byteArrayOutputStream, dictionary, "bbbc");
         ByteArrayInputStream encodedStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
 
         File resFile = new File("res.bin");
