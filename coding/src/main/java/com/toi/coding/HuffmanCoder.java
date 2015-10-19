@@ -1,7 +1,7 @@
 package com.toi.coding;
 
-import com.toi.coding.huffman.HuffmanCode;
-import com.toi.coding.huffman.HuffmanTree;
+import com.toi.huffman.HuffmanCode;
+import com.toi.huffman.HuffmanTree;
 import com.toi.decoding.HuffmanDecoder;
 import org.apache.log4j.Logger;
 

@@ -1,4 +1,4 @@
-package com.toi.coding.huffman;
+package com.toi.huffman;
 
 import java.util.*;
 
