@@ -6,6 +6,7 @@
 
     <artifactId>coding</artifactId>
     <version>0.0.0.1</version>
+    <name>Huffman Coder</name>
 
     <parent>
         <groupId>com.toi</groupId>

@@ -8,6 +8,7 @@
     <artifactId>labs</artifactId>
     <packaging>pom</packaging>
     <version>0.0.0.3</version>
+    <name>Theory of Information</name>
     <modules>
         <module>gui</module>
         <module>generator</module>

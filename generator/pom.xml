@@ -8,6 +8,7 @@
         <version>0.0.0.3</version>
     </parent>
 
+    <name>Generator Lib</name>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>generator</artifactId>
