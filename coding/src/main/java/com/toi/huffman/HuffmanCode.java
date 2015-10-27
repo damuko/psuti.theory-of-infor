@@ -3,7 +3,6 @@ package com.toi.huffman;
 import java.util.*;
 
 
-
 //leaf - node without children nodes
 class HuffmanLeaf extends HuffmanTree {
     public final char value; // the character this leaf represents
@@ -35,10 +34,9 @@ public class HuffmanCode {
         //create queue beginning with least element
         PriorityQueue<HuffmanTree> trees = new PriorityQueue<>();
 
-//        float probCount=0;
         // initially, we have a forest of leaves
         // one for each non-empty character
-        //TODO: add convert float probability to integer priority (1..10)
+        //TODO: add convert float probability to integer priority (1..100)
         for(Map.Entry<Character,Float> c : symbols.entrySet()) {
             trees.offer(new HuffmanLeaf ((int)(c.getValue()*HuffmanTree.HUNDRED_PERCENTS), c.getKey()));
         }
@@ -76,29 +74,6 @@ public class HuffmanCode {
             prefix.deleteCharAt(prefix.length() - 1);
         }
 
-
         return dictionary;
-    }
-    public static void printCodes(HuffmanTree tree, StringBuffer prefix) {
-        assert tree != null;
-        if (tree instanceof HuffmanLeaf) {
-            HuffmanLeaf leaf = (HuffmanLeaf) tree;
-
-            // print out character, probability, and code for this leaf (which is just the prefix)
-            System.out.println(leaf.value + "\t\t" + leaf.probability + "\t\t" + prefix);
-
-        } else if (tree instanceof HuffmanNode) {
-            HuffmanNode node = (HuffmanNode) tree;
-
-            // traverse left
-            prefix.append('0');
-            printCodes(node.left, prefix);
-            prefix.deleteCharAt(prefix.length() - 1);
-
-            // traverse right
-            prefix.append('1');
-            printCodes(node.right, prefix);
-            prefix.deleteCharAt(prefix.length() - 1);
-        }
     }
 }
