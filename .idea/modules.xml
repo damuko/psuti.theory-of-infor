@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/coding/coding.iml" filepath="$PROJECT_DIR$/coding/coding.iml" />
       <module fileurl="file://$PROJECT_DIR$/generator/generator.iml" filepath="$PROJECT_DIR$/generator/generator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/generator-cli/generator-cli.iml" filepath="$PROJECT_DIR$/generator-cli/generator-cli.iml" />
       <module fileurl="file://$PROJECT_DIR$/generator-gui/generator-gui.iml" filepath="$PROJECT_DIR$/generator-gui/generator-gui.iml" />
       <module fileurl="file://$PROJECT_DIR$/labs.iml" filepath="$PROJECT_DIR$/labs.iml" />
     </modules>

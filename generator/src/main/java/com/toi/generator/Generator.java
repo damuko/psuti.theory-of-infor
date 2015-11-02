@@ -6,12 +6,16 @@ import java.util.Random;
 
 public class Generator {
     private final Configuration cfg;
+
     private final float[][] symbolsBorders;
     private final Random rnd = new Random();
     public Generator(Configuration cfg) {
         this.cfg = cfg;
 
        symbolsBorders = initSymbolsBorders();
+    }
+    public Configuration getCfg() {
+        return cfg;
     }
 
     public String getRandomText(int length){

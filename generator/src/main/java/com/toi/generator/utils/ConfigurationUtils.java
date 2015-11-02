@@ -57,8 +57,11 @@ public class ConfigurationUtils {
         return check;
     }
 
-    public  static char [] getSymbolsFromString (String str) throws IllegalArgumentException  {
-        String [] substrings = str.split(",");
+    public  static char [] getSymbols(String str) throws IllegalArgumentException  {
+        String [] substrings = str
+                .replaceAll("\\r\\n","")
+                .replaceAll("\\n","")
+                                    .split(",");
         char [] charArray = new char[substrings.length];
         for(int i=0; i< substrings.length; i++) {
             String currentStr = substrings[i];

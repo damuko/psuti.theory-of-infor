@@ -5,12 +5,26 @@ import com.toi.generator.Configuration;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class IOUtils {
     private static final String INPUT_SIZE_EXCEPTION_TEXT ="Input size is incorrect!";
     private static final String NUMBER_FORMAT_EXCEPTION_TEXT = "Use only numeric values to enter!";
     private static final String PROBABILITY_MATRIX_FORMAT_EXCEPTION_TEXT = "Probability matrix should be square. " +
             "Rows sum should be equals to 1";
+
+    public static String readFile(String path, Charset encoding){
+        try {
+            byte[] encoded = Files.readAllBytes(Paths.get(path));
+            return new String(encoded,encoding);
+        } catch (IOException io) {
+            System.err.println("An error occurred when attempting to read a file:" + path +
+            io.getMessage());
+            return "";
+        }
+    }
 
     //parsing matrix from string
     public static float[][] parseMatrix(String textToParse, int symbolsQuantity) throws IllegalArgumentException {
