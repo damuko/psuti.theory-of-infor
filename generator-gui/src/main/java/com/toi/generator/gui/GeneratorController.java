@@ -1,4 +1,4 @@
-package com.toi.gui;
+package com.toi.generator.gui;
 
 import com.toi.generator.Configuration;
 import com.toi.generator.utils.ConfigurationUtils;
@@ -125,7 +125,7 @@ public class GeneratorController implements Initializable{
 
 
     private char[] parseInitSymbols() {
-        return ConfigurationUtils.getSymbolsFromString(
+        return ConfigurationUtils.getSymbols(
                 insertedSymbolsTextArea.getText().trim());
     }
 

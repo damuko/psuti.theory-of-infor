@@ -1,4 +1,4 @@
-package com.toi.gui;
+package com.toi.generator.gui;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

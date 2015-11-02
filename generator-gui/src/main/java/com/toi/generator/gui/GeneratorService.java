@@ -1,4 +1,4 @@
-package com.toi.gui;
+package com.toi.generator.gui;
 
 
 import com.toi.generator.Configuration;
@@ -9,7 +9,6 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
 public class GeneratorService extends Service<GeneratorService.GenerationResult> {
-//TODO:
     private Configuration configuration;
     private int sequenceSize;
     private String outputFilePath;
