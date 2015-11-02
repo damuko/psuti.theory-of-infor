@@ -39,10 +39,25 @@
         <processorPath useClasspath="true" />
         <module name="coding" />
       </profile>
+      <profile default="false" name="Annotation profile for generator-gui" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+      </profile>
+      <profile default="false" name="Annotation profile for generator.cli" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="generator.cli" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="coding" target="1.8" />
       <module name="generator" target="1.8" />
+      <module name="generator-gui" target="1.8" />
+      <module name="generator.cli" target="1.8" />
       <module name="gui" target="1.8" />
       <module name="lab1" target="1.8" />
       <module name="labs" target="1.8" />

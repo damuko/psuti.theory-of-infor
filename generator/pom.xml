@@ -5,13 +5,13 @@
     <parent>
         <artifactId>labs</artifactId>
         <groupId>com.toi</groupId>
-        <version>0.0.0.3</version>
+        <version>0.0.0.4</version>
     </parent>
 
     <name>Generator Lib</name>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>generator</artifactId>
-    <version>0.0.0.2</version>
-
+    <version>0.0.0.3</version>
+    <name>Random Sequence Generator</name>
 </project>

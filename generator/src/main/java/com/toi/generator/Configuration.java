@@ -2,13 +2,10 @@ package com.toi.generator;
 
 import com.toi.generator.utils.ConfigurationUtils;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashMap;
 import java.util.IllegalFormatException;
 import java.util.Map;
 
-@XmlRootElement
 public class Configuration {
     private char[] symbols;
     private Map<Character,Integer> symbolsMap;
@@ -21,21 +18,12 @@ public class Configuration {
         this.matrixProb = matrixProb;
     }
 
-    public Configuration() {
-    }
-
     private void validateProbMatrix(float[][] matrixProb) throws IllegalArgumentException{
-        if (!ConfigurationUtils.validateMatrixProb(matrixProb))
+        if (!ConfigurationUtils.validateProbabilityMatrix(matrixProb))
             throw new IllegalArgumentException("Matrix has incorrect format!");
     }
     public char[] getSymbols() {
         return symbols;
-    }
-
-    @XmlElement(name = "alphabetSymbols")
-    public void setSymbols(char[] symbols) {
-        this.symbols = symbols;
-        initSymbolsMap(symbols);
     }
 
     private void initSymbolsMap(char[] symbols) {
@@ -46,16 +34,11 @@ public class Configuration {
     }
 
     public int getSymbolPosition(char symbol) {
-//        TODO:add handling for non-existing symbols
-        return  symbolsMap.get(symbol);
+        Integer position = symbolsMap.get(symbol);
+        return position == null ? -1 : position;
     }
     public float[][] getMatrixProb() {
         return matrixProb;
     }
 
-    @XmlElement(name = "probabilityMatrix")
-    public void setMatrixProb(float[][] matrixProb) {
-        validateProbMatrix(matrixProb);
-        this.matrixProb = matrixProb;
-    }
 }

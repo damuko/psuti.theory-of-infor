@@ -7,12 +7,13 @@
     <groupId>com.toi</groupId>
     <artifactId>labs</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.0.3</version>
-    <name>Theory of Information</name>
+    <version>0.0.0.4</version>
+    <name>Theory of Information Labs</name>
     <modules>
-        <module>gui</module>
+        <module>generator-gui</module>
         <module>generator</module>
         <module>coding</module>
+        <module>generator-cli</module>
     </modules>
 <build>
     <plugins>
@@ -29,12 +30,6 @@
     </plugins>
 </build>
     <dependencies>
-        <!-- Classes to XML-->
-        <dependency>
-            <groupId>javax.xml</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.1</version>
-        </dependency>
         <!-- Tests-->
         <dependency>
             <groupId>org.testng</groupId>

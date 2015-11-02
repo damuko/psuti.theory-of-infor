@@ -13,7 +13,7 @@ public class ConfigurationUtilsTest {
                 new float[] {0.5f, 0.3f, 0.2f},
                 new float[] {0.2f, 0.3f, 0.5f}};
 
-        boolean check = ConfigurationUtils.validateMatrixProb(testUtilMatrix1);
+        boolean check = ConfigurationUtils.validateProbabilityMatrix(testUtilMatrix1);
         System.out.println("Test validation matrix - Positive: " + check);
 
         Assert.assertTrue(check);
@@ -27,7 +27,7 @@ public class ConfigurationUtilsTest {
                 new float[] {0.1f, 0.1f, 0.1f},
                 new float[] {0.1f, 0.1f, 0.1f}};
 
-        boolean check = ConfigurationUtils.validateMatrixProb(testUtilMatrix2);
+        boolean check = ConfigurationUtils.validateProbabilityMatrix(testUtilMatrix2);
         System.out.println("Test validation matrix with all 0.1f: " + check);
 
         Assert.assertTrue(!check);
