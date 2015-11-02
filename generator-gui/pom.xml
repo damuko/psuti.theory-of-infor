@@ -7,17 +7,17 @@
     <packaging>jar</packaging>
     <artifactId>generator-gui</artifactId>
     <version>0.0.0.2</version>
-
+    <name>JFX Generator GUI</name>
     <parent>
         <artifactId>labs</artifactId>
         <groupId>com.toi</groupId>
-        <version>0.0.0.3</version>
+        <version>0.0.0.4</version>
     </parent>
     <dependencies>
         <dependency>
             <groupId>com.toi</groupId>
             <artifactId>generator</artifactId>
-            <version>0.0.0.2</version>
+            <version>0.0.0.3</version>
         </dependency>
     </dependencies>
     <build>
@@ -35,7 +35,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.toi.gui.Main</mainClass>
+                            <mainClass>com.toi.generator.gui.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

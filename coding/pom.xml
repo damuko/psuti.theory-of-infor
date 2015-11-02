@@ -6,11 +6,11 @@
 
     <artifactId>coding</artifactId>
     <version>0.0.0.1</version>
-
+    <name>Huffman Coder</name>
     <parent>
         <groupId>com.toi</groupId>
         <artifactId>labs</artifactId>
-        <version>0.0.0.2</version>
+        <version>0.0.0.4</version>
     </parent>
     <dependencies>
         <dependency>
