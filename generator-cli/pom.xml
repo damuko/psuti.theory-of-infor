@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>labs</artifactId>
-        <groupId>com.toi</groupId>
+        <groupId>edu.psuti.toi</groupId>
         <version>0.0.0.4</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -16,7 +16,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.toi</groupId>
+            <groupId>edu.psuti.toi</groupId>
             <artifactId>generator</artifactId>
             <version>0.0.0.3</version>
         </dependency>
@@ -32,7 +32,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.toi.generator.cli.Console</mainClass>
+                            <mainClass>edu.psuti.toi.generator.cli.Console</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

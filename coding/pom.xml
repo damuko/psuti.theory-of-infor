@@ -9,7 +9,7 @@
     <name>Huffman Coder</name>
 
     <parent>
-        <groupId>com.toi</groupId>
+        <groupId>edu.psuti.toi</groupId>
         <artifactId>labs</artifactId>
         <version>0.0.0.4</version>
     </parent>

@@ -6,7 +6,7 @@
 <?import java.net.URL?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="550.0"
             prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.toi.generator.gui.GeneratorController">
+            fx:controller="edu.psuti.toi.generator.gui.GeneratorController">
     <stylesheets>
         <URL value="@generator.css"/>
     </stylesheets>
