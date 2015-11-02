@@ -1,5 +1,7 @@
 package com.toi.decoding;
 
+import org.apache.log4j.Logger;
+
 import java.io.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -8,19 +10,31 @@ import java.io.ObjectInputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-//todo: add method for decoding by only fileName
+//todo: add method for decoding by stream
 public class HuffmanDecoder {
+    private final static Logger logger = Logger.getLogger(HuffmanDecoder.class);
 
-    public static Map readHeader(ByteArrayInputStream bis) {
-        Map restoredHeader = null;
+    public static void decode(ByteArrayInputStream bais, ByteArrayOutputStream decodedStream) {
+        Map<Character,String> header = readHeader(bais);
+        StringBuilder seq = getSequence(bais);
+        try {
+            decodedStream.write(String.valueOf(decodeSequence(seq,header)).getBytes());
+        } catch (IOException ie){
+            logger.error("An error occurred while writing encoded value");
+        }
+    }
 
+    public static Map<Character,String> readHeader(ByteArrayInputStream bis) {
+        Map<Character,String> restoredHeader = null;
+        logger.debug("Read header");
         try (ObjectInputStream ois = new ObjectInputStream(bis)) {
             Object restoredObj = ois.readObject();
             if (restoredObj instanceof Map)
-                restoredHeader = (Map) restoredObj;
+                //noinspection unchecked
+                restoredHeader = (Map<Character,String>) restoredObj;
             else throw new ClassCastException();
         } catch (ClassNotFoundException | IOException | ClassCastException e) {
-            e.printStackTrace();
+            logger.error("An error occured during reading huffman header from file:", e);
         }
         return restoredHeader;
     }
@@ -46,32 +60,14 @@ public class HuffmanDecoder {
         return out.toByteArray();
     }
 
-    //todo : find a normal way to get object size
-    // we should remove reading all bytes to array. We need synchronous read object and after read all other bytes
-    public static long getObjectSize(Object o) throws IOException {
-        // Serializable ser =
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
-        oos.writeObject(o);
-        oos.close();
-        return baos.size();
-    }
-
-    public static byte[] getBytesWithSequence(byte[] allBytes, int headerSize) {
-        int sequenceLength = allBytes.length - headerSize;
-        byte[] bytesWithSequence = new byte[sequenceLength];
-        System.arraycopy(allBytes, headerSize, bytesWithSequence, 0, sequenceLength);
-        return bytesWithSequence;
-    }
-
-    public static StringBuilder getSequenceFromBytes(byte[] bytes) {
-        ByteArrayInputStream encodedBytes = new ByteArrayInputStream(bytes);
-        int bytesQuantity = encodedBytes.available();
+    public static StringBuilder getSequence(ByteArrayInputStream bais) {
+        int bytesQuantity = bais.available();
         StringBuilder encodedSequence = new StringBuilder();
         for (int i = 0; i < bytesQuantity - 1; i++) {
-            encodedSequence.append(String.format("%8s", Integer.toBinaryString(encodedBytes.read())).replace(' ', '0'));
+            encodedSequence.append(String.format("%8s", Integer.toBinaryString(bais.read())).replace(' ', '0'));
         }
-        encodedSequence.delete((encodedSequence.length() - bytes[bytes.length - 1]), encodedSequence.length());
+        int lastBits = bais.read();
+        encodedSequence.delete((encodedSequence.length() - lastBits), encodedSequence.length());
         return encodedSequence;
     }
 
@@ -94,24 +90,27 @@ public class HuffmanDecoder {
         }
         return invertedMap;
     }
-    public static StringBuilder decodeSequence (StringBuilder encodedSequence, Map <Character, String> map)
-            throws Exception{
+
+    public static StringBuilder decodeSequence (StringBuilder encodedSequence, Map <Character, String> header)
+          throws IllegalArgumentException {
+        logger.debug("Sequence before encoding: " + encodedSequence.toString());
+        logger.debug("Start decoding bit sequence");
         StringBuilder prefix = new StringBuilder();
         StringBuilder decodedSequence = new StringBuilder();
 
-        Map invertedMap = getInvertedMap(map);
+        Map invertedMap = getInvertedMap(header);
 
-        int maxPrefixLength = getMaxPrefixLength(map);
+        int maxPrefixLength = getMaxPrefixLength(header);
         boolean check;
         for (int i=0; i< encodedSequence.length(); i++) {
             prefix.append(encodedSequence.charAt(i));
-            check = map.containsValue(prefix.toString());
+            check = header.containsValue(prefix.toString());
             if(check) {
                 decodedSequence.append(invertedMap.get(prefix.toString()));
                 prefix.setLength(0);
             }
             else if ( prefix.length()> maxPrefixLength ) {
-                throw new Exception("Header does not match encoded sequence!");
+                throw new IllegalArgumentException("Header does not match to encoded sequence!");
             }
         }
         return decodedSequence;

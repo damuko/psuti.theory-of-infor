@@ -7,6 +7,7 @@
     <packaging>jar</packaging>
     <artifactId>gui</artifactId>
     <version>0.0.0.2</version>
+    <name>Generator UI</name>
 
     <parent>
         <artifactId>labs</artifactId>

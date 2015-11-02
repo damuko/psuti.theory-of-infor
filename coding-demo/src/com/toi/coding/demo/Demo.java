@@ -1,41 +1,75 @@
 package com.toi.coding.demo;
 
-import com.toi.decoding.HuffmanDecoder;
+import com.toi.coding.HuffmanEncoder;
+import org.apache.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.FileReader;
-import java.io.IOException;
+import com.toi.decoding.HuffmanDecoder;
+import com.toi.huffman.HuffmanCode;
+import com.toi.huffman.HuffmanTree;
+
+import java.io.*;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Demo {
-    public static void main(String[] args) throws IOException {
-        decodingDemo();
-    }
-    private static void decodingDemo() throws IOException {
+    private final static Logger logger = Logger.getLogger(Demo.class);
 
+    public static void main(String[] args) throws IOException {
+        encoderDemo();
+        decoderDemo();
+    }
+    private static void decoderDemo() throws IOException {
+
+
+        //todo: re-write this demo using encoder+decoder
         final String FILE_WITH_SEQUENCE = "generated_sequence.txt";
         final String TO_DECODE_FILE_NAME = "res2.bin";
 
         String sequence = new BufferedReader(new FileReader(FILE_WITH_SEQUENCE)).readLine();
-        System.out.println("Последовательность до кодирования: \t"+ sequence);
 
-        //see comments for method getObjectSize
         byte[] allBytesFromFile = HuffmanDecoder.readBytesArray(TO_DECODE_FILE_NAME);
-        Map restoredMap = HuffmanDecoder.readHeader(new ByteArrayInputStream(allBytesFromFile));
 
-        long headerSize = HuffmanDecoder.getObjectSize(restoredMap);
-        byte[] bytesWithSequence = HuffmanDecoder.getBytesWithSequence(allBytesFromFile, (int) headerSize);
-        StringBuilder encodedSequence = HuffmanDecoder.getSequenceFromBytes(bytesWithSequence);
+        logger.info("\t\t  " + sequence);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        HuffmanDecoder.decode(new ByteArrayInputStream(allBytesFromFile), baos);
 
+        System.out.write(baos.toByteArray());
+    }
+
+    private static void encoderDemo() throws IOException {
+        final String TO_ENCODE_FILE_NAME = "generated_sequence.txt";
+        String  text = readSequence(TO_ENCODE_FILE_NAME);
+        Map<Character, Float> symbolsMap = HuffmanEncoder.getSymbolsProbability(text);
+
+        HuffmanTree tree = HuffmanCode.buildTree(symbolsMap);
+        writeEncodedSequence(tree, text);
+    }
+
+    private static String readSequence(String filePath) {
+        String sequence= null;
         try {
-            StringBuilder decodedSequence = HuffmanDecoder.decodeSequence(encodedSequence, restoredMap);
-            System.out.println("Раскодированная последовательность: " + decodedSequence);
-        }
-        catch (Exception e) {
+            BufferedReader bf = new BufferedReader(new FileReader(filePath));
+            sequence=bf.readLine();
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-        System.out.println("Закодированная последовательность: \t" +encodedSequence);
+        return sequence;
+    }
+
+    private static void writeEncodedSequence(HuffmanTree tree, String text) throws IOException {
+        Map<Character,String> header = HuffmanCode.createHeader(tree, new StringBuilder(), new HashMap<>());
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        HuffmanEncoder.encode(byteArrayOutputStream, header, text);
+
+        File resFile = new File("res2.bin");
+        if (!resFile.exists() && resFile.createNewFile())
+            logger.info("Create a new file for the encoded data: "
+                    + resFile.getName());
+
+        FileOutputStream fos = new FileOutputStream(resFile);
+
+        fos.write(byteArrayOutputStream.toByteArray());
 
     }
 }
