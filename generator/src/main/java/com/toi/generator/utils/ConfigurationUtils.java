@@ -1,31 +1,6 @@
 package com.toi.generator.utils;
 
-
-import com.toi.generator.Configuration;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import java.io.File;
-
 public class ConfigurationUtils {
-    public static Configuration loadConfiguration(String filePath){
-        Configuration configuration = null;
-        try {
-
-            File file = new File(filePath);
-            JAXBContext jaxbContext = JAXBContext.newInstance(Configuration.class);
-
-            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            configuration = (Configuration) jaxbUnmarshaller.unmarshal(file);
-            System.out.println(configuration);
-
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }
-        return configuration;
-    }
 
     public static boolean validateProbabilityMatrix(float[][] probMatrix) {
         if(isItSquareMatrix(probMatrix)) {
@@ -33,13 +8,13 @@ public class ConfigurationUtils {
         }
         else {
             if(isItVector(probMatrix)) {
-                return isColumnsSumEquals1(probMatrix);
+                return isVectorSumEquals1(probMatrix);
             }
         }
         return false;
     }
 
-    public static boolean isColumnsSumEquals1(float[][] probMatrix) {
+    public static boolean isVectorSumEquals1(float[][] probMatrix) {
         float sum=0;
         int size = probMatrix.length;
         for (int i = 0; i != size; i++){
@@ -95,34 +70,4 @@ public class ConfigurationUtils {
         return charArray;
 
     }
-    private static void saveTestConfiguration() {
-        Configuration testCfg = new Configuration();
-
-        testCfg.setSymbols(new char[]{'A', 'B', 'C'});
-        testCfg.setMatrixProb(
-                new float[][] {new float[]{0.1f, 0.2f, 0.7f},
-                        new float[] {0.4f, 0.5f, 0.1f},
-                        new float[] {0.3f,0.3f, 0.4f}
-                }
-//                new float[][] {new float[] {0.1f, 0.4f, 0.5f}}
-        );
-
-        try {
-
-            File file = new File("file.xml");
-            JAXBContext jaxbContext = JAXBContext.newInstance(Configuration.class);
-            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-
-            // output pretty printed
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
-            jaxbMarshaller.marshal(testCfg, file);
-            jaxbMarshaller.marshal(testCfg, System.out);
-
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }
-    }
-
-
 }
