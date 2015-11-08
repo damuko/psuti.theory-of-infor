@@ -1,5 +1,6 @@
 package edu.psuti.toi.coding;
 
+import edu.psuti.toi.huffman.HuffmanCode;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedOutputStream;
@@ -15,13 +16,17 @@ public class HuffmanEncoder {
     /**
      * Encode %text% to the stream using Huffman prefixes
      * @param bos Output Stream
-     * @param header Header contains Chars and prefixes
-     * @param text encoded text
+     * @param encodedText encoded text
      */
-    public static void encode(ByteArrayOutputStream bos, Map<Character, String> header
-            , final String text){
+    public static void encode(ByteArrayOutputStream bos, final String encodedText) {
+        Map<Character,String> header = HuffmanCode.createHeader(
+                HuffmanCode.buildTree(HuffmanEncoder.getSymbolsProbability(encodedText))
+                , new StringBuilder()
+                , new HashMap<>()
+        );
+
         writeHeader(bos, header);
-        encodeSymbols(bos,header,text);
+        encodeSymbols(bos,header,encodedText);
     }
 
     public static void encodeSymbols(ByteArrayOutputStream bos, Map<Character,String> header, final String text) {
