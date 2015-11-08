@@ -15,63 +15,77 @@ public class HuffmanEncoder {
 
     /**
      * Encode %text% to the stream using Huffman prefixes
-     * @param bos Output Stream
+     *
+     * @param bos         Output Stream
      * @param encodedText encoded text
      */
     public static void encode(ByteArrayOutputStream bos, final String encodedText) {
-        Map<Character,String> header = HuffmanCode.createHeader(
+        Map<Character, String> header = HuffmanCode.createHeader(
                 HuffmanCode.buildTree(HuffmanEncoder.getSymbolsProbability(encodedText))
                 , new StringBuilder()
                 , new HashMap<>()
         );
 
         writeHeader(bos, header);
-        encodeSymbols(bos,header,encodedText);
+        encodeSymbols(bos, header, encodedText);
+
+        double inSize = encodedText.toCharArray().length;
+        int outSize = bos.size();
+
+        double compressing = (double)outSize / inSize * 100; // 100%
+        logger.debug("InStream Size: " + inSize);
+        logger.debug("OutStream Size: " + outSize);
+
+        logger.info("Compression rate: " + compressing);
+        logger.info("Bits on symbol: " + getBitsOnSymbol(outSize, encodedText.length()));
     }
 
-    public static void encodeSymbols(ByteArrayOutputStream bos, Map<Character,String> header, final String text) {
+
+    public static double getBitsOnSymbol(int streamSize, int textLength) {
+        return ((double)streamSize * 8) / (double) textLength;
+    }
+
+    public static void encodeSymbols(ByteArrayOutputStream bos, Map<Character, String> header, final String text) {
         if (text.isEmpty())
             return;
 
         try {
-            BufferedOutputStream buffStream = new BufferedOutputStream(bos); //TODO: [backlog]investigate what buff size is the best
+            BufferedOutputStream buffStream = new BufferedOutputStream(bos);
             logger.debug("Write bit sequence to the stream");
             byte currPosition = 0;
             short currByte = 0;
-            for (int i = 0; i != text.length(); i++){
+            for (int i = 0; i != text.length(); i++) {
                 Character c = text.charAt(i);
                 String prefix = header.get(c);
                 //handle incorrect headers
                 if (prefix != null) {
-                    for (char currBit : prefix.toCharArray()){
+                    for (char currBit : prefix.toCharArray()) {
                         currByte <<= 1;
 
-                        if (currBit == '1'){
-                            currByte |=  1;
+                        if (currBit == '1') {
+                            currByte |= 1;
                         }
                         currPosition++;
 
-                        //TODO: [backlog] Investigate max possible length of prefix.
-                        // Maybe: add handling for 256> symbols in prefix
                         if (currPosition == 8) {
 
-                            byte converted = (byte)currByte;
+                            byte converted = (byte) currByte;
                             buffStream.write(converted);
                             currPosition = 0;
                             currByte = 0;
                         }
                     }
                 } else {
-                    logger.error("Header does not contain prefix for this symbol: " + (int)c);
+                    logger.error("Header does not contain prefix for this symbol: " + (int) c);
                     return;
                 }
             }
             //writing quantity of empty bits to the last byte
             writeEmptyBitsQuantity(buffStream, currPosition, currByte);
 
-        } catch (ClassCastException cce){
+        } catch (ClassCastException cce) {
             logger.error("Incorrect header value. Are you sure that header " +
-                    "contains <Character,String> entries?",cce);
+                    "contains <Character,String> entries?", cce);
         } catch (IOException e) {
             logger.error("An error occurred during writing to output stream.");
         }
@@ -93,7 +107,7 @@ public class HuffmanEncoder {
         buffStream.close();
     }
 
-    public static void writeHeader(ByteArrayOutputStream bos, Map<Character,String> header) {
+    public static void writeHeader(ByteArrayOutputStream bos, Map<Character, String> header) {
         BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(bos);
         logger.debug("Write header");
         try (ObjectOutputStream os = new ObjectOutputStream(bufferedOutputStream)) {
@@ -106,10 +120,10 @@ public class HuffmanEncoder {
         }
     }
 
-    public static Map <Character, Float> getSymbolsProbability(String sequence){
-        Map <Character, Float> symbolsMap = new HashMap<>();
+    public static Map<Character, Float> getSymbolsProbability(String sequence) {
+        Map<Character, Float> symbolsMap = new HashMap<>();
         int seqSize = sequence.length();
-        for (int i=0; i< seqSize; i++) {
+        for (int i = 0; i < seqSize; i++) {
             char c = sequence.charAt(i);
             Float currProb = symbolsMap.get(c);
             if (currProb == null) {
@@ -117,8 +131,8 @@ public class HuffmanEncoder {
             }
             symbolsMap.put(c, ++currProb);
         }
-        for (Map.Entry<Character, Float> c : symbolsMap.entrySet()){
-            symbolsMap.put(c.getKey(),c.getValue() / seqSize);
+        for (Map.Entry<Character, Float> c : symbolsMap.entrySet()) {
+            symbolsMap.put(c.getKey(), c.getValue() / seqSize);
         }
 
         return symbolsMap;

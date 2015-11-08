@@ -93,7 +93,7 @@ public class HuffmanDecoder {
 
     public static StringBuilder decodeSequence (StringBuilder encodedSequence, Map <Character, String> header)
           throws IllegalArgumentException {
-        logger.debug("Sequence before encoding: " + encodedSequence.toString());
+//        logger.debug("Sequence before encoding: " + encodedSequence.toString());
         logger.debug("Start decoding bit sequence");
         StringBuilder prefix = new StringBuilder();
         StringBuilder decodedSequence = new StringBuilder();
