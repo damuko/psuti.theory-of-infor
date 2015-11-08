@@ -7,7 +7,7 @@
     <groupId>edu.psuti.toi</groupId>
     <artifactId>labs</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.0.4</version>
+    <version>0.0.0.4-r1</version>
     <name>Theory of Information Labs</name>
     <modules>
         <module>generator-gui</module>

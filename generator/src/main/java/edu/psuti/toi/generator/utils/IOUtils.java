@@ -1,6 +1,7 @@
 package edu.psuti.toi.generator.utils;
 
 import edu.psuti.toi.generator.Configuration;
+import static edu.psuti.toi.generator.utils.GeneratorUtils.*;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -84,15 +85,38 @@ public class IOUtils {
         }
     }
 
-    public static void outputResults(Configuration cfg, String generatedText
-            ,String outputFilePath, StringBuilder resultBuilder) throws IOException {
+    public static void outputResults(
+             Configuration cfg
+            ,String generatedText
+            ,String outputFilePath
+            ,StringBuilder resultMatrixBuilder) throws IOException {
 
-        float[][] resultMatrix = GeneratorUtils.calcResultProbability(generatedText, cfg);
+        float[][] resProbabilityMatrix = calcResultProbability(generatedText, cfg);
 
-        printMatrix(resultMatrix, resultBuilder);
+        float conditionalEntropy = calculateConditionalEntropy(resProbabilityMatrix);
+        float unconditionalEntropy = calculateUnconditionalEntropy(resProbabilityMatrix);
+        float redundancy;
+
+        redundancy = calculateRedundancy(cfg, conditionalEntropy, unconditionalEntropy);
+
+        printMatrix(resProbabilityMatrix, resultMatrixBuilder);
+
+        resultMatrixBuilder
+                .append(System.lineSeparator())
+                .append(System.lineSeparator())
+                .append("Conditional Entropy: ")
+                .append(conditionalEntropy)
+                .append(System.lineSeparator())
+                .append("Unconditional Entropy: ")
+                .append(unconditionalEntropy)
+                .append(System.lineSeparator())
+                .append("Redundancy: ")
+                .append(redundancy);
+
 
         writeToFile(generatedText, outputFilePath);
 
     }
+
 
 }

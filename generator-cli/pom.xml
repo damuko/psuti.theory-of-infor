@@ -5,12 +5,12 @@
     <parent>
         <artifactId>labs</artifactId>
         <groupId>edu.psuti.toi</groupId>
-        <version>0.0.0.4</version>
+        <version>0.0.0.4-r1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>generator.cli</artifactId>
-    <version>0.0.0.1</version>
+    <version>0.0.0.2</version>
     <name>Simple Console CLI</name>
     <description>Console CLI for Generator module</description>
 

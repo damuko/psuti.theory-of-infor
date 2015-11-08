@@ -22,13 +22,18 @@ public class GeneratorService extends Service<GeneratorService.GenerationResult>
                         outputFilePath.isEmpty())
                     throw new ExceptionInInitializerError("Please set configuration and sequenceSize properties.");
 
-                StringBuilder resultBuilder = new StringBuilder();
+                StringBuilder resMatrixBuilder = new StringBuilder();
                 String generatedText = new Generator(configuration).getRandomText(sequenceSize);
                 float[][] resultMatrix = GeneratorUtils.calcResultProbability(generatedText, configuration);
-                IOUtils.outputResults(configuration, generatedText, outputFilePath, resultBuilder);
+
+                IOUtils.outputResults(
+                          configuration
+                        , generatedText
+                        , outputFilePath
+                        , resMatrixBuilder);
 
 
-                return new GenerationResult(resultBuilder,resultMatrix, generatedText);
+                return new GenerationResult(resMatrixBuilder, resultMatrix, generatedText);
             }
         };
     }
@@ -38,15 +43,17 @@ public class GeneratorService extends Service<GeneratorService.GenerationResult>
         final private float[][] resultMatrix;
         final private String generatedText;
 
-        public GenerationResult(StringBuilder resultBuilder, float[][] resultMatrix, String generatedText) {
+        public GenerationResult(StringBuilder resultBuilder
+                , float[][] resultMatrix, String generatedText) {
             this.resultBuilder = resultBuilder;
             this.resultMatrix = resultMatrix;
             this.generatedText = generatedText;
         }
 
-        public String getGeneratedText(){
+        public String getGeneratedText() {
             return this.generatedText;
         }
+
 
         public StringBuilder getResultBuilder() {
             return resultBuilder;
@@ -55,11 +62,14 @@ public class GeneratorService extends Service<GeneratorService.GenerationResult>
         public float[][] getResultMatrix() {
             return resultMatrix;
         }
+
     }
+
 
     public void setOutputFilePath(String outputFilePath) {
         this.outputFilePath = outputFilePath;
     }
+
     public void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
     }

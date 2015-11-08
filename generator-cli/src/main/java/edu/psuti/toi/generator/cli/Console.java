@@ -3,6 +3,7 @@ package edu.psuti.toi.generator.cli;
 import edu.psuti.toi.generator.Configuration;
 import edu.psuti.toi.generator.Generator;
 import edu.psuti.toi.generator.utils.ConfigurationUtils;
+import edu.psuti.toi.generator.utils.GeneratorUtils;
 import edu.psuti.toi.generator.utils.IOUtils;
 
 import java.nio.charset.Charset;
@@ -24,14 +25,18 @@ public class Console {
                 );
 
                 Generator generator = new Generator(new Configuration(chars,probMatrix));
-                StringBuilder resBuilder = new StringBuilder();
+
+                StringBuilder resProbMatrix = new StringBuilder();
                 IOUtils.outputResults(
-                        generator.getCfg()
+                         generator.getCfg()
                         ,generator.getRandomText(Integer.parseInt(args[2]))
                         ,args[3]
-                        ,resBuilder
+                        ,resProbMatrix
                 );
-                System.out.print(resBuilder.toString());
+
+                System.out.println("Probability matrix for the generated text: ");
+                System.out.print(resProbMatrix.toString());
+
             } else throw new IllegalArgumentException();
         } catch (Exception ex){
             printHelp();

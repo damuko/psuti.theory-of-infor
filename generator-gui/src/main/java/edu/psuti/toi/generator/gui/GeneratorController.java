@@ -28,12 +28,6 @@ public class GeneratorController implements Initializable{
     private TextArea generatedSequenceTextArea;
 
     @FXML
-    private Label condEntrValueLbl;
-
-    @FXML
-    private Label uncondEntrValueLbl;
-
-    @FXML
     private Label statusValueLbl;
 
     @FXML
@@ -62,9 +56,8 @@ public class GeneratorController implements Initializable{
             confirmProbButton.setDisable(false);
 
             generatedObject[0] = generatorService.getValue();
-            float[][] probMatrix = generatedObject[0].getResultMatrix();
 
-            displayGenerationResults(probMatrix);
+            displayGenerationResults();
         });
         generatorService.setOnFailed(workerStateEvent -> {
             confirmProbButton.setDisable(false);
@@ -78,11 +71,11 @@ public class GeneratorController implements Initializable{
         generatorService.restart();
     }
 
-    private void displayGenerationResults(float[][] probMatrix) {
+    private void displayGenerationResults() {
         generatedSequenceTextArea.clear();
+
         generatedSequenceTextArea.appendText(generatedObject[0].getResultBuilder().toString());
-        uncondEntrValueLbl.setText(Float.toString(GeneratorUtils.calculateUnconditionalEntropy(probMatrix)));
-        condEntrValueLbl.setText(Float.toString(GeneratorUtils.calculateConditionalEntropy(probMatrix)));
+
         statusValueLbl.setText("Text generation is finished.");
     }
 
